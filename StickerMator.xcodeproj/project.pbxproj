@@ -8,17 +8,23 @@
 
 /* Begin PBXBuildFile section */
 		FB6A061C272F7CF4000DBA59 /* StickerMatorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6A061B272F7CF4000DBA59 /* StickerMatorApp.swift */; };
-		FB6A061E272F7CF4000DBA59 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6A061D272F7CF4000DBA59 /* ContentView.swift */; };
+		FB6A061E272F7CF4000DBA59 /* StickerMatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6A061D272F7CF4000DBA59 /* StickerMatorView.swift */; };
 		FB6A0620272F7CF6000DBA59 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB6A061F272F7CF6000DBA59 /* Assets.xcassets */; };
 		FB6A0623272F7CF6000DBA59 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB6A0622272F7CF6000DBA59 /* Preview Assets.xcassets */; };
+		FB6A062A272F868D000DBA59 /* StickerMatorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6A0629272F868D000DBA59 /* StickerMatorModel.swift */; };
+		FB6A062C272F8F1A000DBA59 /* StickerMatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6A062B272F8F1A000DBA59 /* StickerMatorViewModel.swift */; };
+		FB6A062E272FB0C9000DBA59 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6A062D272FB0C8000DBA59 /* Helper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		FB6A0618272F7CF4000DBA59 /* StickerMator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StickerMator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB6A061B272F7CF4000DBA59 /* StickerMatorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerMatorApp.swift; sourceTree = "<group>"; };
-		FB6A061D272F7CF4000DBA59 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		FB6A061D272F7CF4000DBA59 /* StickerMatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerMatorView.swift; sourceTree = "<group>"; };
 		FB6A061F272F7CF6000DBA59 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FB6A0622272F7CF6000DBA59 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		FB6A0629272F868D000DBA59 /* StickerMatorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerMatorModel.swift; sourceTree = "<group>"; };
+		FB6A062B272F8F1A000DBA59 /* StickerMatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerMatorViewModel.swift; sourceTree = "<group>"; };
+		FB6A062D272FB0C8000DBA59 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,7 +58,10 @@
 			isa = PBXGroup;
 			children = (
 				FB6A061B272F7CF4000DBA59 /* StickerMatorApp.swift */,
-				FB6A061D272F7CF4000DBA59 /* ContentView.swift */,
+				FB6A0629272F868D000DBA59 /* StickerMatorModel.swift */,
+				FB6A062B272F8F1A000DBA59 /* StickerMatorViewModel.swift */,
+				FB6A061D272F7CF4000DBA59 /* StickerMatorView.swift */,
+				FB6A062D272FB0C8000DBA59 /* Helper.swift */,
 				FB6A061F272F7CF6000DBA59 /* Assets.xcassets */,
 				FB6A0621272F7CF6000DBA59 /* Preview Content */,
 			);
@@ -137,7 +146,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FB6A061E272F7CF4000DBA59 /* ContentView.swift in Sources */,
+				FB6A062A272F868D000DBA59 /* StickerMatorModel.swift in Sources */,
+				FB6A061E272F7CF4000DBA59 /* StickerMatorView.swift in Sources */,
+				FB6A062E272FB0C9000DBA59 /* Helper.swift in Sources */,
+				FB6A062C272F8F1A000DBA59 /* StickerMatorViewModel.swift in Sources */,
 				FB6A061C272F7CF4000DBA59 /* StickerMatorApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
