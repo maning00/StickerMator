@@ -13,21 +13,16 @@ struct StickerMatorModel {
     
     
     enum StickerSource: Hashable {
-        init (imageData: Data) {
+        init (_ imageData: Data) {
             self = .imageData(imageData)
         }
         
-        init (url: URL) {
+        init (_ url: URL) {
             self = .url(url)
-        }
-        
-        init (emoji: String) {
-            self = .emoji(emoji)
         }
         
         case imageData(Data)
         case url(URL)
-        case emoji(String)
         
         var url: URL? {
             switch self {
@@ -43,17 +38,10 @@ struct StickerMatorModel {
             default: return nil
             }
         }
-        
-        var emoji: String? {
-            switch self {
-            case .emoji(let emoji): return emoji
-            default: return nil
-            }
-        }
     }
     
     
-    // Sticker is an image or emoji
+    // Sticker is an image
     struct Sticker: Identifiable, Hashable {
         let content: StickerSource
         var x: Int  // offset from center
