@@ -13,6 +13,18 @@ struct StickerMatorModel {
     
     
     enum StickerSource: Hashable {
+        init (imageData: Data) {
+            self = .imageData(imageData)
+        }
+        
+        init (url: URL) {
+            self = .url(url)
+        }
+        
+        init (emoji: String) {
+            self = .emoji(emoji)
+        }
+        
         case imageData(Data)
         case url(URL)
         case emoji(String)

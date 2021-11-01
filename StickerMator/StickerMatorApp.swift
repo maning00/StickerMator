@@ -9,9 +9,10 @@ import SwiftUI
 
 @main
 struct StickerMatorApp: App {
+    let document = StickerMatorViewModel()
     var body: some Scene {
         WindowGroup {
-            StickerMatorView()
+            StickerMatorView(document: document)
         }
     }
 }
