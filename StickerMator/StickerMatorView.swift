@@ -42,16 +42,17 @@ struct StickerMatorView: View {
                                     .position(position(for: sticker, in: geometry))
                                     .onTapGesture {
                                         print("taped")
-                                    }
+                                    }.scaleEffect(zoomScale)
+                                    .gesture(zoomGesture().simultaneously(with: panGesture()))
                             }
                         }
                     }
-                }.scaleEffect(zoomScale)
+                }
             }
             .onDrop(of: [String(kUTTypeURL)], isTargeted: nil) { providers, location in
                     drop(providers: providers, at: location, in: geometry)
             }
-            .gesture(zoomGesture())
+            
         }
     }
     
@@ -78,8 +79,8 @@ struct StickerMatorView: View {
     private func convertToEmojiCoordinates(_ location: CGPoint, in geometry: GeometryProxy) -> (x: Int, y: Int) {
         let center = geometry.frame(in: .local).center
         let location = CGPoint(
-            x: (location.x - center.x) / zoomScale,
-            y: (location.y - center.y) / zoomScale
+            x: (location.x - panOffset.width - center.x) / zoomScale,
+            y: (location.y - panOffset.height - center.y) / zoomScale
         )
         return (Int(location.x), Int(location.y))
     }
@@ -87,8 +88,8 @@ struct StickerMatorView: View {
     private func convertFromEmojiCoordinates(_ location: (x: Int, y: Int), in geometry: GeometryProxy) -> CGPoint {
         let center = geometry.frame(in: .local).center
         return CGPoint(
-            x: center.x + CGFloat(location.x) * zoomScale,
-            y: center.y + CGFloat(location.y) * zoomScale
+            x: center.x + CGFloat(location.x) * zoomScale + panOffset.width,
+            y: center.y + CGFloat(location.y) * zoomScale + panOffset.height
         )
     }
     
@@ -108,6 +109,23 @@ struct StickerMatorView: View {
             }
             .onEnded { gestureScaleAtEnd in
                 steadyZoomScale *= gestureScaleAtEnd
+            }
+    }
+    
+    @State private var steadyPanOffset: CGSize = CGSize.zero
+    @GestureState private var gesturePanOffset: CGSize = CGSize.zero
+    
+    private var panOffset: CGSize {
+        (steadyPanOffset + gesturePanOffset) * zoomScale
+    }
+    
+    private func panGesture() -> some Gesture {
+        DragGesture()
+            .updating($gesturePanOffset) { latestvalue, gesturePanOffset, _ in
+                gesturePanOffset = latestvalue.translation / zoomScale
+            }
+            .onEnded { finalValue in
+                steadyPanOffset = steadyPanOffset + (finalValue.translation / zoomScale)
             }
     }
 

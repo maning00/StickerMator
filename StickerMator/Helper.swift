@@ -58,12 +58,20 @@ extension Array where Element == NSItemProvider {
 }
 
 
-extension Character {
-    var isEmoji: Bool {
-        if let firstScalar = unicodeScalars.first, firstScalar.properties.isEmoji {
-            return (firstScalar.value >= 0x238d || unicodeScalars.count > 1)
-        } else {
-            return false
-        }
+extension CGSize {
+    static func -(left: Self, right: Self) -> CGSize {
+        CGSize(width: left.width - right.width, height: left.height - right.height)
+    }
+    
+    static func +(left: Self, right: Self) -> CGSize {
+        CGSize(width: left.width + right.width, height: left.height + right.height)
+    }
+    
+    static func *(left: Self, right: CGFloat) -> CGSize {
+        CGSize(width: left.width * right, height: left.height * right)
+    }
+    
+    static func /(left: Self, right: CGFloat) -> CGSize {
+        CGSize(width: left.width / right, height: left.height / right)
     }
 }
