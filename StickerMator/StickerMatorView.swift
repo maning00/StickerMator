@@ -22,39 +22,44 @@ struct StickerMatorView: View {
         }
     }
     
-    var defaultFontSize: CGFloat = 40
+    var defaultFontSize: CGFloat = 200
     var documentBody: some View {
         GeometryReader { geometry in
             ZStack {
-                Color.white
-                ForEach(document.stickers) { sticker in
-                    switch sticker.content {
-                    case .imageData(let data):
-                        if let uiImage = UIImage(data: data) {
-                            Image(uiImage: uiImage).position(position(for: sticker, in: geometry))
-                        }
-                    case .url(let url):
-                        if let uiImage = UIImage(named: url.absoluteString) {
-                            Image(uiImage: uiImage)
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 200, height: 200, alignment: .topLeading)
-                                .position(position(for: sticker, in: geometry))
+                Color.white.overlay {
+                    ForEach(document.stickers) { sticker in
+                        switch sticker.content {
+                        case .imageData(let data):
+                            if let uiImage = UIImage(data: data) {
+                                Image(uiImage: uiImage).position(position(for: sticker, in: geometry))
+                            }
+                        case .url(let url):
+                            if let uiImage = UIImage(named: url.absoluteString) {
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: frameSize(for: sticker), height: frameSize(for: sticker), alignment: .topLeading)
+                                    .position(position(for: sticker, in: geometry))
+                                    .onTapGesture {
+                                        print("taped")
+                                    }
+                            }
                         }
                     }
-                }
+                }.scaleEffect(zoomScale)
             }
             .onDrop(of: [String(kUTTypeURL)], isTargeted: nil) { providers, location in
                     drop(providers: providers, at: location, in: geometry)
             }
-//            .onDrop(of: [String(kUTTypeURL)], delegate: document)
+            .gesture(zoomGesture())
         }
     }
     
+    // drag & drop
     private func drop(providers: [NSItemProvider], at location: CGPoint, in geometry: GeometryProxy) -> Bool {
         providers.loadObjects(ofType: URL.self) { url in
             print(url)
-            document.addSticker(StickerSource(url), at: convertToEmojiCoordinates(location, in: geometry), size: defaultFontSize)
+            document.addSticker(StickerSource(url), at: convertToEmojiCoordinates(location, in: geometry), size: defaultFontSize / zoomScale)
         }
     }
     
@@ -66,15 +71,15 @@ struct StickerMatorView: View {
         convertFromEmojiCoordinates((sticker.x, sticker.y), in: geometry)
     }
     
-    private func fontSize(for sticker: StickerMatorModel.Sticker) -> CGFloat {
+    private func frameSize(for sticker: StickerMatorModel.Sticker) -> CGFloat {
         CGFloat(sticker.size)
     }
     
     private func convertToEmojiCoordinates(_ location: CGPoint, in geometry: GeometryProxy) -> (x: Int, y: Int) {
         let center = geometry.frame(in: .local).center
         let location = CGPoint(
-            x: (location.x - center.x),
-            y: (location.y - center.y)
+            x: (location.x - center.x) / zoomScale,
+            y: (location.y - center.y) / zoomScale
         )
         return (Int(location.x), Int(location.y))
     }
@@ -82,9 +87,28 @@ struct StickerMatorView: View {
     private func convertFromEmojiCoordinates(_ location: (x: Int, y: Int), in geometry: GeometryProxy) -> CGPoint {
         let center = geometry.frame(in: .local).center
         return CGPoint(
-            x: center.x + CGFloat(location.x),
-            y: center.y + CGFloat(location.y)
+            x: center.x + CGFloat(location.x) * zoomScale,
+            y: center.y + CGFloat(location.y) * zoomScale
         )
+    }
+    
+    // Scale
+    
+    @State private var steadyZoomScale: CGFloat = 1
+    @GestureState private var gestureZoomScale: CGFloat = 1
+    
+    private var zoomScale: CGFloat {
+        steadyZoomScale * gestureZoomScale
+    }
+    
+    private func zoomGesture() -> some Gesture {
+        MagnificationGesture()
+            .updating($gestureZoomScale) { latestGestureScale, gestureZoomScale, _ in
+                gestureZoomScale = latestGestureScale
+            }
+            .onEnded { gestureScaleAtEnd in
+                steadyZoomScale *= gestureScaleAtEnd
+            }
     }
 
 }
