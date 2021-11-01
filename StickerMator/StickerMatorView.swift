@@ -17,6 +17,7 @@ struct StickerMatorView: View {
     var body: some View {
         VStack(spacing: 0) {
             documentBody
+                .clipped()
             palette
         }
     }
@@ -30,17 +31,19 @@ struct StickerMatorView: View {
                     switch sticker.content {
                     case .imageData(let data):
                         if let uiImage = UIImage(data: data) {
-                            Image(uiImage: uiImage)
+                            Image(uiImage: uiImage).position(position(for: sticker, in: geometry))
                         }
                     case .url(let url):
                         if let uiImage = UIImage(named: url.absoluteString) {
                             Image(uiImage: uiImage)
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: 200, height: 200, alignment: .topLeading)
+                                .position(position(for: sticker, in: geometry))
                         }
-                    default: Color.red        // default
                     }
                 }
             }
-            .clipped()
             .onDrop(of: [String(kUTTypeURL)], isTargeted: nil) { providers, location in
                     drop(providers: providers, at: location, in: geometry)
             }
@@ -49,18 +52,11 @@ struct StickerMatorView: View {
     }
     
     private func drop(providers: [NSItemProvider], at location: CGPoint, in geometry: GeometryProxy) -> Bool {
-        return providers.loadObjects(ofType: URL.self) { url in
+        providers.loadObjects(ofType: URL.self) { url in
             print(url)
             document.addSticker(StickerSource(url), at: convertToEmojiCoordinates(location, in: geometry), size: defaultFontSize)
-//            if let emoji = string.first, emoji.isEmoji {
-//                                document.addSticker(
-//                                    StickerSource(String(emoji)),
-//                                    at: convertToEmojiCoordinates(location, in: geometry),
-//                                    size: defaultFontSize
-//                                )
-//                }
         }
-        }
+    }
     
     var palette: some View {
         ScrollingStickerView(images: document.builtinImage)
