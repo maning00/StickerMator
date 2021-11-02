@@ -44,8 +44,8 @@ struct StickerMatorModel {
     // Sticker is an image
     struct Sticker: Identifiable, Hashable {
         let content: StickerSource
-        var x: Int  // offset from center
-        var y: Int   // offset from center
+        var x: Int
+        var y: Int
         var width: Int
         var height: Int
         let id: Int

@@ -15,14 +15,14 @@ struct StickerSet: Identifiable, Hashable {
 
 
 class StickerStorage: ObservableObject {
-    let name: String
+    var name: String
     
-    @Published var palettes = [StickerSet]()
+    @Published var stickerSets = [StickerSet]()
     
     
     init(name: String) {
         self.name = name
-        if palettes.isEmpty {
+        if stickerSets.isEmpty {
             addStickerSet(name: "Dogs", stickers: [
                 URL(string: "dog_01")!, URL(string: "dog_02")!, URL(string: "dog_03")!,
                 URL(string: "dog_04")!, URL(string: "dog_05")!, URL(string: "dog_06")!,
@@ -42,15 +42,15 @@ class StickerStorage: ObservableObject {
                 URL(string: "icebear_22")!, URL(string: "icebear_23")!, URL(string: "icebear_24")!,
                 URL(string: "icebear_25")!, URL(string: "icebear_26")!
             ])
-            addStickerSet(name: "Monkey", stickers: [
-                URL(string: "monkey_01")!, URL(string: "monkey_02")!, URL(string: "monkey_03")!,
-                URL(string: "monkey_04")!, URL(string: "monkey_05")!, URL(string: "monkey_06")!,
-                URL(string: "monkey_07")!, URL(string: "monkey_08")!, URL(string: "monkey_09")!,
-                URL(string: "monkey_10")!, URL(string: "monkey_11")!, URL(string: "monkey_12")!,
-                URL(string: "monkey_13")!, URL(string: "monkey_14")!, URL(string: "monkey_15")!,
-                URL(string: "monkey_16")!, URL(string: "monkey_17")!, URL(string: "monkey_18")!,
-                URL(string: "monkey_19")!, URL(string: "monkey_20")!, URL(string: "monkey_21")!,
-                URL(string: "monkey_22")!, URL(string: "monkey_23")!, URL(string: "monkey_24")!
+            addStickerSet(name: "Cat", stickers: [
+                URL(string: "cat_01")!, URL(string: "cat_02")!, URL(string: "cat_03")!,
+                URL(string: "cat_04")!, URL(string: "cat_05")!, URL(string: "cat_06")!,
+                URL(string: "cat_07")!, URL(string: "cat_08")!, URL(string: "cat_09")!,
+                URL(string: "cat_10")!, URL(string: "cat_11")!, URL(string: "cat_12")!,
+                URL(string: "cat_13")!, URL(string: "cat_14")!, URL(string: "cat_15")!,
+                URL(string: "cat_16")!, URL(string: "cat_17")!, URL(string: "cat_18")!,
+                URL(string: "cat_19")!, URL(string: "cat_20")!, URL(string: "cat_21")!,
+                URL(string: "cat_22")!, URL(string: "cat_23")!, URL(string: "cat_24")!
             ])
             addStickerSet(name: "Penguin", stickers: [
                 URL(string: "penguin_01")!, URL(string: "penguin_02")!, URL(string: "penguin_03")!,
@@ -72,12 +72,12 @@ class StickerStorage: ObservableObject {
     func addStickerSet(name: String, stickers: [URL]? = nil) {
         uniqueStickerSetId += 1
         let palette = StickerSet(id: uniqueStickerSetId, name: name, stickers: stickers)
-        palettes.append(palette)
+        stickerSets.append(palette)
     }
     
     func removeStickerSet(at index: Int) {
-        if palettes.count > 1, palettes.indices.contains(index) {
-            palettes.remove(at: index)
+        if stickerSets.count > 1, stickerSets.indices.contains(index) {
+            stickerSets.remove(at: index)
         }
     }
 }

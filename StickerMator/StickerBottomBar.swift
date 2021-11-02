@@ -15,29 +15,33 @@ struct StickerBottomBar: View {
     var body: some View {
         HStack {
             controlButton
-            body(for: store.palettes[chosenIndex])
+            body(for: store.stickerSets[chosenIndex])
         }
     }
     
     @State private var chosenIndex = 0
+    @State private var stickersetToEdit: StickerSet? = nil
     
     var labelFont: Font {.system(size: 40)}  // to set button size
     
     @ViewBuilder
     var contextMenu: some View {
-        AnimatedActionButton(title: "Edit", systemImage: "pencil.circle"){}
+        AnimatedActionButton(title: "Add", systemImage: "plus"){}
+        AnimatedActionButton(title: "Edit", systemImage: "pencil.circle"){
+            stickersetToEdit = store.stickerSets[chosenIndex]
+        }
         AnimatedActionButton(title: "New", systemImage: "plus.circle") {
+            store.addStickerSet(name: "New")
         }
-        AnimatedActionButton(title: "Manager", systemImage: "slider.vertical.3") {
-        }
+        AnimatedActionButton(title: "Manager", systemImage: "slider.vertical.3") {}
         gotoMenu
     }
     
     var gotoMenu: some View {
         Menu {
-            ForEach (store.palettes) { palette in
+            ForEach (store.stickerSets) { palette in
                 AnimatedActionButton(title: palette.name) {
-                    if let index = store.palettes.findIndex(of: palette) {
+                    if let index = store.stickerSets.findIndex(of: palette) {
                         chosenIndex = index
                     }
                 }
@@ -49,14 +53,18 @@ struct StickerBottomBar: View {
     
     var controlButton: some View {
         AnimatedActionButton(systemImage: "circle.grid.cross",
-                             action: { chosenIndex = (chosenIndex + 1) % store.palettes.count },
+                             action: { chosenIndex = (chosenIndex + 1) % store.stickerSets.count },
                              labelFont: labelFont).contextMenu {contextMenu}
     }
     
     
     func body(for stickerSet: StickerSet) -> some View {
         HStack {
-            ScrollingStickerView(images: store.palettes[chosenIndex].stickers)
+            Text(stickerSet.name)
+            ScrollingStickerView(images: store.stickerSets[chosenIndex].stickers)
+        }
+        .popover(item: $stickersetToEdit) { stickerset in
+                StickerSetEditor(stickerToEdit: $store.stickerSets[chosenIndex])
         }
     }
 }
@@ -77,7 +85,7 @@ struct ScrollingStickerView: View {
                     
                 }
                 }
-            }.frame(minHeight: 20,maxHeight: 70, alignment: .topLeading)
+            }.frame(minHeight: 20,maxHeight: 70, alignment: .topLeading) // Limit sticker bar size
         }
     }
 }

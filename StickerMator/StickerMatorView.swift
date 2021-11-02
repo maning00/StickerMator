@@ -93,7 +93,7 @@ struct StickerMatorView: View {
         
     }
     
-    // drag & drop
+    // MARK: drag & drop
     private func drop(providers: [NSItemProvider], at location: CGPoint, in geometry: GeometryProxy) -> Bool {
         providers.loadObjects(ofType: URL.self) { url in
             print(url)
@@ -102,7 +102,7 @@ struct StickerMatorView: View {
     }
     
     
-    // Position the view
+    // MARK: Position the view
     private func position(for sticker: StickerMatorModel.Sticker, in geometry: GeometryProxy) -> CGPoint {
         convertFromEmojiCoordinates((sticker.x, sticker.y), in: geometry)
     }
@@ -126,7 +126,7 @@ struct StickerMatorView: View {
         )
     }
     
-    // Scale
+    // MARK: Scale
     
     @State private var steadyZoomScale: CGFloat = 1
     @GestureState private var gestureZoomScale: CGFloat = 1
