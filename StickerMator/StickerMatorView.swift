@@ -26,7 +26,7 @@ struct StickerMatorView: View {
     var documentBody: some View {
         GeometryReader { geometry in
             ZStack {
-                Color.white.overlay {
+                Color.white
                     ForEach(document.stickers) { sticker in
                         switch sticker.content {
                         case .imageData(let data):
@@ -37,23 +37,40 @@ struct StickerMatorView: View {
                             if let uiImage = UIImage(named: url.absoluteString) {
                                 Image(uiImage: uiImage)
                                     .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: frameSize(for: sticker), height: frameSize(for: sticker), alignment: .topLeading)
+                                    .border(Color.blue, width: selectedSticker.containsMatching(sticker) ? 4 : 0)
+                                    .frame(width: frameSize(for: sticker), height: frameSize(for: sticker))
+                                    .offset(selectedSticker.containsMatching(sticker) ? stickerGesturePanOffset : .zero) // if selected seprate panoff
                                     .position(position(for: sticker, in: geometry))
                                     .onTapGesture {
-                                        print("taped")
-                                    }.scaleEffect(zoomScale)
-                                    .gesture(zoomGesture().simultaneously(with: panGesture()))
+                                        withAnimation {
+                                            selectedSticker.toggleMatching(sticker)
+                                        }
+                                    }.scaleEffect(selectedSticker.containsMatching(sticker) ? zoomScale * stickerGestureZoomScale : zoomScale)
+                                    .gesture(panGesture(for: sticker))
                             }
                         }
                     }
-                }
+                
+                    .scaleEffect(zoomScale)
             }
+            .clipped()
             .onDrop(of: [String(kUTTypeURL)], isTargeted: nil) { providers, location in
                     drop(providers: providers, at: location, in: geometry)
             }
-            
+            .gesture(zoomGesture().simultaneously(with: singleTapToDeselectAllSticker().simultaneously(with: panGesture())))
         }
+    }
+    
+    @State private var selectedSticker = Set<StickerMatorModel.Sticker>()
+    
+    private func singleTapToDeselectAllSticker() -> some Gesture {
+        TapGesture()
+            .onEnded {
+                withAnimation {
+                    selectedSticker.removeAll()
+                }
+            }
+        
     }
     
     // drag & drop
@@ -68,6 +85,7 @@ struct StickerMatorView: View {
         ScrollingStickerView(images: document.builtinImage)
     }
     
+    // Position the view
     private func position(for sticker: StickerMatorModel.Sticker, in geometry: GeometryProxy) -> CGPoint {
         convertFromEmojiCoordinates((sticker.x, sticker.y), in: geometry)
     }
@@ -77,19 +95,17 @@ struct StickerMatorView: View {
     }
     
     private func convertToEmojiCoordinates(_ location: CGPoint, in geometry: GeometryProxy) -> (x: Int, y: Int) {
-        let center = geometry.frame(in: .local).center
         let location = CGPoint(
-            x: (location.x - panOffset.width - center.x) / zoomScale,
-            y: (location.y - panOffset.height - center.y) / zoomScale
+            x: (location.x - panOffset.width) / zoomScale,
+            y: (location.y - panOffset.height) / zoomScale
         )
         return (Int(location.x), Int(location.y))
     }
     
     private func convertFromEmojiCoordinates(_ location: (x: Int, y: Int), in geometry: GeometryProxy) -> CGPoint {
-        let center = geometry.frame(in: .local).center
         return CGPoint(
-            x: center.x + CGFloat(location.x) * zoomScale + panOffset.width,
-            y: center.y + CGFloat(location.y) * zoomScale + panOffset.height
+            x: CGFloat(location.x) * zoomScale + panOffset.width,
+            y:  CGFloat(location.y) * zoomScale + panOffset.height
         )
     }
     
@@ -97,36 +113,67 @@ struct StickerMatorView: View {
     
     @State private var steadyZoomScale: CGFloat = 1
     @GestureState private var gestureZoomScale: CGFloat = 1
+    @GestureState private var stickerGestureZoomScale: CGFloat = 1
     
     private var zoomScale: CGFloat {
         steadyZoomScale * gestureZoomScale
     }
     
     private func zoomGesture() -> some Gesture {
-        MagnificationGesture()
+        // once selected zoomGesture will apply in all area
+        
+        return MagnificationGesture()
+            .updating($stickerGestureZoomScale) { latestGestureScale, stickerGestureZoomScale, _ in
+                if !selectedSticker.isEmpty {
+                    stickerGestureZoomScale = latestGestureScale
+                }
+            }
             .updating($gestureZoomScale) { latestGestureScale, gestureZoomScale, _ in
-                gestureZoomScale = latestGestureScale
+                if selectedSticker.isEmpty {
+                    gestureZoomScale = latestGestureScale
+                }
             }
             .onEnded { gestureScaleAtEnd in
-                steadyZoomScale *= gestureScaleAtEnd
+                if selectedSticker.isEmpty {
+                    steadyZoomScale *= gestureScaleAtEnd
+                } else {
+                    for sticker in selectedSticker {
+                        document.scaleSticker(sticker, by: gestureScaleAtEnd)
+                    }
+                }
             }
+        
     }
     
     @State private var steadyPanOffset: CGSize = CGSize.zero
     @GestureState private var gesturePanOffset: CGSize = CGSize.zero
+    @GestureState private var stickerGesturePanOffset: CGSize = CGSize.zero  // single sticker panoff
     
     private var panOffset: CGSize {
         (steadyPanOffset + gesturePanOffset) * zoomScale
     }
     
-    private func panGesture() -> some Gesture {
-        DragGesture()
-            .updating($gesturePanOffset) { latestvalue, gesturePanOffset, _ in
-                gesturePanOffset = latestvalue.translation / zoomScale
+    private func panGesture(for sticker: StickerMatorModel.Sticker? = nil) -> some Gesture {
+        if let sticker = sticker, selectedSticker.containsMatching(sticker) {
+            
+        return DragGesture()
+            .updating($stickerGesturePanOffset) { latestvalue, stickerGesturePanOffset, _ in
+                stickerGesturePanOffset = latestvalue.translation
             }
             .onEnded { finalValue in
-                steadyPanOffset = steadyPanOffset + (finalValue.translation / zoomScale)
+                for sticker in selectedSticker {
+                    document.moveSticker(sticker, by: finalValue.translation / zoomScale)
+                }
             }
+        } else {
+            return DragGesture()
+                .updating($gesturePanOffset) { latestvalue, gesturePanOffset, _ in
+                    gesturePanOffset = latestvalue.translation
+                }
+                .onEnded { finalValue in
+                    steadyPanOffset = steadyPanOffset + (finalValue.translation / zoomScale)
+                }
+        }
     }
 
 }
