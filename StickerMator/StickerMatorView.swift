@@ -16,13 +16,33 @@ struct StickerMatorView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            documentBody
-                .clipped()
+            ZStack(alignment: .topLeading) {
+                documentBody
+                deleteSelectedStickerButton.padding(.vertical)  //
+            }
             palette
         }
     }
     
     var defaultFontSize: CGFloat = 200
+    
+    @ViewBuilder
+    private var deleteSelectedStickerButton: some View {
+        if !selectedSticker.isEmpty {
+            Button {
+                withAnimation {
+                    for sticker in selectedSticker {
+                        document.removeSticker(sticker)
+                    }
+                    selectedSticker.removeAll()
+                }
+            } label: {
+                Label("Delete", systemImage: "trash")
+                    .foregroundColor(.red)
+                }
+            }
+        }
+    
     var documentBody: some View {
         GeometryReader { geometry in
             ZStack {

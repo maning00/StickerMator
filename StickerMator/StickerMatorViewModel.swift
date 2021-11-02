@@ -35,6 +35,10 @@ class StickerMatorViewModel: ObservableObject {
         }
     }
     
+    func removeSticker(_ sticker: StickerMatorModel.Sticker) {
+        stickerMator.removeSticker(sticker)
+    }
+    
     //
     // test
     

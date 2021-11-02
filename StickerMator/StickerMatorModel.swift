@@ -68,5 +68,11 @@ struct StickerMatorModel {
         stickers.append(Sticker(content: content, x: location.x, y: location.y, size: size, id: uniqueStickerId))
     }
     
+    mutating func removeSticker (_ sticker: Sticker) {
+        if let index = stickers.findIndex(of: sticker) {
+            stickers.remove(at: index)
+        }
+    }
+    
     
 }
