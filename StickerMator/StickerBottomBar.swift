@@ -21,19 +21,22 @@ struct StickerBottomBar: View {
     
     @State private var chosenIndex = 0
     @State private var stickersetToEdit: StickerSet? = nil
+    @State private var managing = false
     
     var labelFont: Font {.system(size: 40)}  // to set button size
     
     @ViewBuilder
     var contextMenu: some View {
-        AnimatedActionButton(title: "Add", systemImage: "plus"){}
         AnimatedActionButton(title: "Edit", systemImage: "pencil.circle"){
             stickersetToEdit = store.stickerSets[chosenIndex]
         }
         AnimatedActionButton(title: "New", systemImage: "plus.circle") {
-            store.addStickerSet(name: "New")
+            chosenIndex = store.addStickerSet(name: "New")
+            stickersetToEdit = store.stickerSets[chosenIndex]
         }
-        AnimatedActionButton(title: "Manager", systemImage: "slider.vertical.3") {}
+        AnimatedActionButton(title: "Manager", systemImage: "slider.vertical.3") {
+            managing = true
+        }
         gotoMenu
     }
     
@@ -65,6 +68,9 @@ struct StickerBottomBar: View {
         }
         .popover(item: $stickersetToEdit) { stickerset in
                 StickerSetEditor(stickerToEdit: $store.stickerSets[chosenIndex])
+        }
+        .sheet(isPresented: $managing) {
+            StickerSetManager()
         }
     }
 }

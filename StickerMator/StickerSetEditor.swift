@@ -20,12 +20,14 @@ struct StickerSetEditor: View {
             editStickerSection
         }
         .frame(minWidth: 400, minHeight: 500, alignment: .center)
+        .navigationTitle("Edit \(stickerToEdit.name)")
     }
     
     var editStickerSection: some View {
-        Section(header: Text("edit")) {
+        Section(header: Text("Tap + to add, long press to delete")) {
             if let stickers = stickerToEdit.stickers {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))]) {
+                    Image(systemName: "plus").scaleEffect(2)  // Tap to add
                     ForEach(stickers, id:\.self) { url in
                         if let uiImage = UIImage(named: url.absoluteString) {
                             Image(uiImage: uiImage)
@@ -33,10 +35,14 @@ struct StickerSetEditor: View {
                                 .frame(maxWidth: 80, maxHeight: 80)
                         }
                     }
-                    }
+                }
+            } else {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))]) {
+                    Image(systemName: "plus").scaleEffect(2)  // Tap to add
                 }
             }
         }
     }
+}
 
 

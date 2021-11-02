@@ -69,10 +69,12 @@ class StickerStorage: ObservableObject {
     
     private var uniqueStickerSetId = 0
     
-    func addStickerSet(name: String, stickers: [URL]? = nil) {
-        uniqueStickerSetId += 1
+    func addStickerSet(name: String, stickers: [URL]? = nil) -> Int {
+        
         let palette = StickerSet(id: uniqueStickerSetId, name: name, stickers: stickers)
         stickerSets.append(palette)
+        uniqueStickerSetId += 1
+        return uniqueStickerSetId - 1
     }
     
     func removeStickerSet(at index: Int) {
