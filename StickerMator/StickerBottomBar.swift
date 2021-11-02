@@ -21,17 +21,36 @@ struct StickerBottomBar: View {
     
     @State private var chosenIndex = 0
     
-    var labelFont: Font {.system(size: 40)}
+    var labelFont: Font {.system(size: 40)}  // to set button size
     
-    var controlButton: some View {
-        Button {
-            withAnimation {
-                chosenIndex = (chosenIndex + 1) % store.palettes.count
+    @ViewBuilder
+    var contextMenu: some View {
+        AnimatedActionButton(title: "Edit", systemImage: "pencil.circle"){}
+        AnimatedActionButton(title: "New", systemImage: "plus.circle") {
+        }
+        AnimatedActionButton(title: "Manager", systemImage: "slider.vertical.3") {
+        }
+        gotoMenu
+    }
+    
+    var gotoMenu: some View {
+        Menu {
+            ForEach (store.palettes) { palette in
+                AnimatedActionButton(title: palette.name) {
+                    if let index = store.palettes.findIndex(of: palette) {
+                        chosenIndex = index
+                    }
+                }
             }
         } label: {
-            Image(systemName: "paintpalette")
+            Label("Go To", systemImage: "text.insert")
         }
-        .font(labelFont)
+    }
+    
+    var controlButton: some View {
+        AnimatedActionButton(systemImage: "circle.grid.cross",
+                             action: { chosenIndex = (chosenIndex + 1) % store.palettes.count },
+                             labelFont: labelFont).contextMenu {contextMenu}
     }
     
     
@@ -39,9 +58,6 @@ struct StickerBottomBar: View {
         HStack {
             ScrollingStickerView(images: store.palettes[chosenIndex].stickers)
         }
-        .transition (
-            AnyTransition.asymmetric(insertion: .offset(x: 0, y: 300), removal: .offset(x: 0, y: -300))
-        )
     }
 }
 
