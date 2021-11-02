@@ -67,7 +67,7 @@ struct StickerBottomBar: View {
             ScrollingStickerView(images: store.stickerSets[chosenIndex].stickers)
         }
         .popover(item: $stickersetToEdit) { stickerset in
-                StickerSetEditor(stickerToEdit: $store.stickerSets[chosenIndex])
+                StickerSetEditor(stickerSetToEdit: $store.stickerSets[chosenIndex])
         }
         .sheet(isPresented: $managing) {
             StickerSetManager()

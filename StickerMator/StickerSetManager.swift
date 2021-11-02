@@ -14,7 +14,7 @@ struct StickerSetManager: View {
         NavigationView {
             List {
                 ForEach(store.stickerSets) { stickerset in
-                    NavigationLink(destination: StickerSetEditor(stickerToEdit: $store.stickerSets[stickerset.id])) {
+                    NavigationLink(destination: StickerSetEditor(stickerSetToEdit: $store.stickerSets[stickerset.id])) {
                         VStack {
                             Text(stickerset.name)
                         }

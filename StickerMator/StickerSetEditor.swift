@@ -9,30 +9,37 @@ import SwiftUI
 
 struct StickerSetEditor: View {
     
-    @Binding var stickerToEdit: StickerSet
+    @Binding var stickerSetToEdit: StickerSet
     
     
     var body: some View {
         Form {
             Section(header: Text("name")) {
-                TextField(text: $stickerToEdit.name) {}
+                TextField(text: $stickerSetToEdit.name) {}
             }
             editStickerSection
         }
         .frame(minWidth: 400, minHeight: 500, alignment: .center)
-        .navigationTitle("Edit \(stickerToEdit.name)")
+        .navigationTitle("Edit \(stickerSetToEdit.name)")
     }
     
     var editStickerSection: some View {
-        Section(header: Text("Tap + to add, long press to delete")) {
-            if let stickers = stickerToEdit.stickers {
+        Section(header: Text("Tap + to add, double tap to delete")) {
+            if !stickerSetToEdit.stickers.isEmpty {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))]) {
                     Image(systemName: "plus").scaleEffect(2)  // Tap to add
-                    ForEach(stickers, id:\.self) { url in
+                    ForEach(stickerSetToEdit.stickers, id:\.self) { url in
                         if let uiImage = UIImage(named: url.absoluteString) {
                             Image(uiImage: uiImage)
                                 .resizable()
                                 .frame(maxWidth: 80, maxHeight: 80)
+                                .onTapGesture(count: 2) {
+                                    withAnimation {
+                                        print("tapped \(url)")
+                                        print("\(stickerSetToEdit.stickers)")
+                                        stickerSetToEdit.stickers.removeAll(where: {$0 == url})
+                                    }
+                                }
                         }
                     }
                 }
