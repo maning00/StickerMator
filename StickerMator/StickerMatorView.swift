@@ -15,16 +15,16 @@ struct StickerMatorView: View {
     
     
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(alignment: .leading, spacing: 0) {
             ZStack(alignment: .topLeading) {
                 documentBody
-                deleteSelectedStickerButton.padding(.vertical)  //
+                deleteSelectedStickerButton
             }
-            palette
+            StickerBottomBar()
         }
     }
     
-    var defaultFontSize: CGFloat = 200
+    var defaultStickerSize: CGSize = CGSize(width: 300, height: 300)
     
     @ViewBuilder
     private var deleteSelectedStickerButton: some View {
@@ -58,7 +58,7 @@ struct StickerMatorView: View {
                                 Image(uiImage: uiImage)
                                     .resizable()
                                     .border(Color.blue, width: selectedSticker.containsMatching(sticker) ? 4 : 0)
-                                    .frame(width: frameSize(for: sticker), height: frameSize(for: sticker))
+                                    .frame(width: frameSize(for: sticker).width, height: frameSize(for: sticker).height)
                                     .offset(selectedSticker.containsMatching(sticker) ? stickerGesturePanOffset : .zero) // if selected seprate panoff
                                     .position(position(for: sticker, in: geometry))
                                     .onTapGesture {
@@ -97,21 +97,18 @@ struct StickerMatorView: View {
     private func drop(providers: [NSItemProvider], at location: CGPoint, in geometry: GeometryProxy) -> Bool {
         providers.loadObjects(ofType: URL.self) { url in
             print(url)
-            document.addSticker(StickerSource(url), at: convertToEmojiCoordinates(location, in: geometry), size: defaultFontSize / zoomScale)
+            document.addSticker(StickerSource(url), at: convertToEmojiCoordinates(location, in: geometry), size: defaultStickerSize / zoomScale)
         }
     }
     
-    var palette: some View {
-        ScrollingStickerView(images: document.builtinImage)
-    }
     
     // Position the view
     private func position(for sticker: StickerMatorModel.Sticker, in geometry: GeometryProxy) -> CGPoint {
         convertFromEmojiCoordinates((sticker.x, sticker.y), in: geometry)
     }
     
-    private func frameSize(for sticker: StickerMatorModel.Sticker) -> CGFloat {
-        CGFloat(sticker.size)
+    private func frameSize(for sticker: StickerMatorModel.Sticker) -> CGSize {
+        CGSize(width: sticker.width, height: sticker.height)
     }
     
     private func convertToEmojiCoordinates(_ location: CGPoint, in geometry: GeometryProxy) -> (x: Int, y: Int) {
@@ -196,30 +193,6 @@ struct StickerMatorView: View {
         }
     }
 
-}
-
-struct ScrollingStickerView: View {
-    init(images: [URL?]) {
-        self.images = images
-    }
-    
-    let images: [URL?]
-    var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(alignment: .top, spacing: 0) {
-                // map to characters
-                ForEach(images, id:\.self) { image in
-                    if let image = image {
-                        Image(uiImage: UIImage(named: image.absoluteString)!)
-                        .resizable().padding(1).aspectRatio(contentMode: .fill)
-                        .onDrag {
-                            NSItemProvider(item: image as NSSecureCoding, typeIdentifier: String(kUTTypeURL))
-                        }
-                    }
-                }
-            }.frame(minHeight: 20,maxHeight: 70, alignment: .topLeading)
-        }
-    }
 }
 
 

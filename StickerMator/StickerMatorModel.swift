@@ -46,15 +46,17 @@ struct StickerMatorModel {
         let content: StickerSource
         var x: Int  // offset from center
         var y: Int   // offset from center
-        var size: Int
+        var width: Int
+        var height: Int
         let id: Int
         
-        fileprivate init(content: StickerSource, x: Int, y: Int, size: Int, id: Int) {
+        fileprivate init(content: StickerSource, x: Int, y: Int, width: Int, height: Int, id: Int) {
             self.content = content
             self.x = x
             self.y = y
             self.id = id
-            self.size = size
+            self.width = width
+            self.height = height
         }
     }
     
@@ -63,9 +65,9 @@ struct StickerMatorModel {
     private var uniqueStickerId = 0
     
     
-    mutating func addSticker (content: StickerSource, at location:(x: Int, y: Int), size: Int) {
+    mutating func addSticker (content: StickerSource, at location:(x: Int, y: Int), size: (width: Int, height: Int)) {
         uniqueStickerId += 1
-        stickers.append(Sticker(content: content, x: location.x, y: location.y, size: size, id: uniqueStickerId))
+        stickers.append(Sticker(content: content, x: location.x, y: location.y, width: size.width, height: size.height, id: uniqueStickerId))
     }
     
     mutating func removeSticker (_ sticker: Sticker) {

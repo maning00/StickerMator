@@ -14,6 +14,8 @@
 		FB6A062A272F868D000DBA59 /* StickerMatorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6A0629272F868D000DBA59 /* StickerMatorModel.swift */; };
 		FB6A062C272F8F1A000DBA59 /* StickerMatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6A062B272F8F1A000DBA59 /* StickerMatorViewModel.swift */; };
 		FB6A062E272FB0C9000DBA59 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6A062D272FB0C8000DBA59 /* Helper.swift */; };
+		FBC250E1273118DA005DAD6C /* StickerBottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC250E0273118DA005DAD6C /* StickerBottomBar.swift */; };
+		FBC250E327311A2B005DAD6C /* StickerStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC250E227311A2B005DAD6C /* StickerStorage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +27,8 @@
 		FB6A0629272F868D000DBA59 /* StickerMatorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerMatorModel.swift; sourceTree = "<group>"; };
 		FB6A062B272F8F1A000DBA59 /* StickerMatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerMatorViewModel.swift; sourceTree = "<group>"; };
 		FB6A062D272FB0C8000DBA59 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
+		FBC250E0273118DA005DAD6C /* StickerBottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerBottomBar.swift; sourceTree = "<group>"; };
+		FBC250E227311A2B005DAD6C /* StickerStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStorage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +65,8 @@
 				FB6A0629272F868D000DBA59 /* StickerMatorModel.swift */,
 				FB6A062B272F8F1A000DBA59 /* StickerMatorViewModel.swift */,
 				FB6A061D272F7CF4000DBA59 /* StickerMatorView.swift */,
+				FBC250E0273118DA005DAD6C /* StickerBottomBar.swift */,
+				FBC250E227311A2B005DAD6C /* StickerStorage.swift */,
 				FB6A062D272FB0C8000DBA59 /* Helper.swift */,
 				FB6A061F272F7CF6000DBA59 /* Assets.xcassets */,
 				FB6A0621272F7CF6000DBA59 /* Preview Content */,
@@ -146,8 +152,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FBC250E327311A2B005DAD6C /* StickerStorage.swift in Sources */,
 				FB6A062A272F868D000DBA59 /* StickerMatorModel.swift in Sources */,
 				FB6A061E272F7CF4000DBA59 /* StickerMatorView.swift in Sources */,
+				FBC250E1273118DA005DAD6C /* StickerBottomBar.swift in Sources */,
 				FB6A062E272FB0C9000DBA59 /* Helper.swift in Sources */,
 				FB6A062C272F8F1A000DBA59 /* StickerMatorViewModel.swift in Sources */,
 				FB6A061C272F7CF4000DBA59 /* StickerMatorApp.swift in Sources */,
