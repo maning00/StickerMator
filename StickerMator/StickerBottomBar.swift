@@ -22,8 +22,6 @@ struct StickerBottomBar: View {
     @State private var chosenIndex = 0
     @State private var stickersetToEdit: StickerSet? = nil
     @State private var managing = false
-    @State private var showImagePicker = false
-    @State private var showCameraPicker = false
     
     var labelFont: Font {.system(size: 40)}  // to set button size
     
@@ -40,20 +38,6 @@ struct StickerBottomBar: View {
             managing = true
         }
         gotoMenu
-        addMenu
-    }
-    
-    var addMenu: some View {
-        Menu {
-            AnimatedActionButton(title: "From Camera", systemImage: "camera") {
-                showCameraPicker = true
-            }
-            AnimatedActionButton(title: "From Photos", systemImage: "photo.on.rectangle") {
-                showImagePicker = true
-            }
-        } label: {
-            Label("Add Photo", systemImage: "plus")
-        }
     }
     
     var gotoMenu: some View {
@@ -87,12 +71,6 @@ struct StickerBottomBar: View {
         }
         .sheet(isPresented: $managing) {
             StickerSetManager()
-        }
-        .sheet(isPresented: $showImagePicker) {
-            ImagePicker(imageHandleFunc: {_ in })
-        }
-        .sheet(isPresented: $showCameraPicker) {
-            Camera(imageHandleFunc: {_ in })
         }
     }
 }

@@ -132,3 +132,9 @@ extension RangeReplaceableCollection where Element: Identifiable {
         }
     }
 }
+
+
+func getDocumentsDirectory() -> URL {
+    let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+    return paths[0]
+}
