@@ -67,16 +67,16 @@ class StickerStorage: ObservableObject {
         }
     }
     
-    private var uniqueStickerSetId = 0
+    func addStickerSet(name: String, stickers: [URL] = [], at index: Int = 0) {
+        let unique = (stickerSets.max(by: { $0.id < $1.id })?.id ?? 0) + 1// get maxID + 1
+        let safeIndex = min(max(index, 0), stickerSets.count)
+        let set = StickerSet(id: unique, name: name, stickers: stickers)
+        stickerSets.insert(set, at: safeIndex)
+    }
     
-    func addStickerSet(name: String, stickers: [URL]? = nil) -> Int {
-        if let stickers = stickers {
-            let palette = StickerSet(id: uniqueStickerSetId, name: name, stickers: stickers)
-            stickerSets.append(palette)
-            uniqueStickerSetId += 1
-        }
-        
-        return uniqueStickerSetId - 1
+    func stickerSet(at index: Int) -> StickerSet {
+        let safeIndex = min(max(index, 0), stickerSets.count - 1)
+        return stickerSets[safeIndex]
     }
     
     func removeStickerSet(at index: Int) {

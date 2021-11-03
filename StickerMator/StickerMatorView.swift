@@ -70,7 +70,6 @@ struct StickerMatorView: View {
                             }
                         }
                     }
-                
                     .scaleEffect(zoomScale)
             }
             .clipped()

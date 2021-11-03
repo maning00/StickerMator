@@ -108,3 +108,27 @@ struct AnimatedActionButton: View {
         }.font(labelFont)
     }
 }
+
+
+extension RangeReplaceableCollection where Element: Identifiable {
+    mutating func remove(_ element: Element) {
+        if let index = findIndex(of: element) {
+            remove(at: index)
+        }
+    }
+
+    subscript(_ element: Element) -> Element {
+        get {
+            if let index = findIndex(of: element) {
+                return self[index]
+            } else {
+                return element
+            }
+        }
+        set {
+            if let index = findIndex(of: element) {
+                replaceSubrange(index...index, with: [newValue])
+            }
+        }
+    }
+}

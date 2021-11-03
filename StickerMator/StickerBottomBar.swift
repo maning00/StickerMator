@@ -15,7 +15,7 @@ struct StickerBottomBar: View {
     var body: some View {
         HStack {
             controlButton
-            body(for: store.stickerSets[chosenIndex])
+            body(for: store.stickerSet(at: chosenIndex))
         }
     }
     
@@ -28,11 +28,11 @@ struct StickerBottomBar: View {
     @ViewBuilder
     var contextMenu: some View {
         AnimatedActionButton(title: "Edit", systemImage: "pencil.circle"){
-            stickersetToEdit = store.stickerSets[chosenIndex]
+            stickersetToEdit = store.stickerSet(at: chosenIndex)
         }
         AnimatedActionButton(title: "New", systemImage: "plus.circle") {
-            chosenIndex = store.addStickerSet(name: "New")
-            stickersetToEdit = store.stickerSets[chosenIndex]
+            store.addStickerSet(name: "New", at: chosenIndex)
+            stickersetToEdit = store.stickerSet(at: chosenIndex)
         }
         AnimatedActionButton(title: "Manager", systemImage: "slider.vertical.3") {
             managing = true
@@ -64,7 +64,7 @@ struct StickerBottomBar: View {
     func body(for stickerSet: StickerSet) -> some View {
         HStack {
             Text(stickerSet.name)
-            ScrollingStickerView(images: store.stickerSets[chosenIndex].stickers)
+            ScrollingStickerView(images: store.stickerSet(at: chosenIndex).stickers)
         }
         .popover(item: $stickersetToEdit) { stickerset in
                 StickerSetEditor(stickerSetToEdit: $store.stickerSets[chosenIndex])

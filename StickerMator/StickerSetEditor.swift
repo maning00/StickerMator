@@ -35,8 +35,6 @@ struct StickerSetEditor: View {
                                 .frame(maxWidth: 80, maxHeight: 80)
                                 .onTapGesture(count: 2) {
                                     withAnimation {
-                                        print("tapped \(url)")
-                                        print("\(stickerSetToEdit.stickers)")
                                         stickerSetToEdit.stickers.removeAll(where: {$0 == url})
                                     }
                                 }
