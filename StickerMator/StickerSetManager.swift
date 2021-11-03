@@ -9,6 +9,7 @@ import SwiftUI
 
 struct StickerSetManager: View {
     @EnvironmentObject var store: StickerStorage
+    @Environment(\.dismiss) var dissmiss
     
     @State private var editMode: EditMode = .inactive
     
@@ -33,7 +34,13 @@ struct StickerSetManager: View {
                 }
             }.navigationTitle("Manage Sticker")
                 .toolbar {
-                    EditButton()
+                    ToolbarItem{ EditButton() }
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button("Cancel") {
+                            dissmiss()
+                        }
+                        
+                    }
                 }
                 .environment(\.editMode, $editMode)
         }

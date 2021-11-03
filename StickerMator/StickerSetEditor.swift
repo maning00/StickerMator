@@ -12,6 +12,7 @@ struct StickerSetEditor: View {
     @Binding var stickerSetToEdit: StickerSet
     
     @State private var imagePicker: ImagePickerType? = nil
+    @Environment(\.dismiss) var dissmiss
     
     enum ImagePickerType: Identifiable {
         case camera
@@ -32,18 +33,18 @@ struct StickerSetEditor: View {
     
     // save picked image and append its URL to stickerset
     private func handlePickedSticker(_ image: UIImage?) {
-        print("start handle")
+        logger.info("Function handlePickedSticker catched image")
         if let image = image {
             let userFileName = UUID().uuidString
             if let data = image.pngData() {
                 let filename = getDocumentsDirectory().appendingPathComponent(userFileName)
-                print(filename)
+                logger.info("Image saved to \(filename)")
                 try? data.write(to: filename)
             }
             if let urlStr = getSavedImage(named: userFileName) {
                 stickerSetToEdit.stickers.append(URL(string: urlStr)!)
             } else {
-                print("failed")
+                logger.warning("Get URL failed")
             }
         }
         imagePicker = nil
@@ -82,6 +83,11 @@ struct StickerSetEditor: View {
                             .onTapGesture(count: 2) {
                                 withAnimation {
                                     stickerSetToEdit.stickers.removeAll(where: {$0 == url})
+                                    do {
+                                        try FileManager.default.removeItem(atPath: url.absoluteString)
+                                    } catch let error {
+                                        logger.error("\(error.localizedDescription): \(url)")
+                                    }
                                 }
                             }
                     }

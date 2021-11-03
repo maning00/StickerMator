@@ -15,7 +15,7 @@ class StickerMatorViewModel: ObservableObject {
     init () {
         stickerMator = StickerMatorModel()
     }
-
+    
     var stickers: [StickerMatorModel.Sticker] { stickerMator.stickers }
     
     func addSticker (_ sticker: StickerSource, at location:(x: Int, y: Int), size: CGSize) {
@@ -41,10 +41,16 @@ class StickerMatorViewModel: ObservableObject {
         stickerMator.removeSticker(sticker)
     }
     
-
     
-    
-    // @Published var selectedImages: [Img] = []
+    private func saveData(to url: URL) {
+        do {
+            let data: Data = try stickerMator.jsonEncode()
+            try data.write(to: url)
+            logger.info("saveData success")
+        } catch {
+            logger.error("Data write failed: \(error.localizedDescription)")
+        }
+    }
     
     
     

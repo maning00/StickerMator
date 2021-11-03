@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct StickerSet: Identifiable, Hashable {
+struct StickerSet: Identifiable, Hashable, Codable {
     let id: Int
     var name: String
     var stickers: [URL]
@@ -15,14 +15,40 @@ struct StickerSet: Identifiable, Hashable {
 
 
 class StickerStorage: ObservableObject {
-    var name: String
+    var name: String = "Default"
     
-    @Published var stickerSets = [StickerSet]()
+    @Published var stickerSets = [StickerSet]() {
+        didSet {
+            do {
+                let data = try jsonEncode()
+                UserDefaults.standard.set(data, forKey: name)
+            } catch {
+                logger.error("Userdefaults set failed:\(error.localizedDescription)")
+            }
+        }
+    }
     
+    private func restoreFromUserDefaults() throws {
+        if let stickerSetsPlist = UserDefaults.standard.data(forKey: name) {
+            self.stickerSets = try JSONDecoder().decode([StickerSet].self, from: stickerSetsPlist)
+            logger.info("Loaded defaults: \(stickerSets)")
+        }
+    }
+    
+    init(json: Data) throws {
+        self.stickerSets = try JSONDecoder().decode([StickerSet].self, from: json)
+    }
+    
+    init(url: URL) throws {
+        let data = try Data(contentsOf: url)
+        self.stickerSets = try JSONDecoder().decode([StickerSet].self, from: data)
+    }
     
     init(name: String) {
         self.name = name
+        try? restoreFromUserDefaults()
         if stickerSets.isEmpty {
+            logger.info("Using default stickers")
             addStickerSet(name: "Dogs", stickers: [
                 URL(string: "dog_01")!, URL(string: "dog_02")!, URL(string: "dog_03")!,
                 URL(string: "dog_04")!, URL(string: "dog_05")!, URL(string: "dog_06")!,
@@ -65,6 +91,10 @@ class StickerStorage: ObservableObject {
                 URL(string: "penguin_28")!
             ])
         }
+    }
+    
+    func jsonEncode() throws -> Data {
+        return try JSONEncoder().encode(stickerSets)
     }
     
     func addStickerSet(name: String, stickers: [URL] = [], at index: Int = 0) {

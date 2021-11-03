@@ -67,7 +67,7 @@ struct StickerBottomBar: View {
             ScrollingStickerView(images: store.stickerSet(at: chosenIndex).stickers)
         }
         .popover(item: $stickersetToEdit) { stickerset in
-                StickerSetEditor(stickerSetToEdit: $store.stickerSets[chosenIndex])
+            StickerSetEditor(stickerSetToEdit: $store.stickerSets[chosenIndex])
         }
         .sheet(isPresented: $managing) {
             StickerSetManager()
@@ -76,20 +76,19 @@ struct StickerBottomBar: View {
 }
 
 struct ScrollingStickerView: View {
-    let images: [URL]?
+    let images: [URL]
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(alignment: .top, spacing: 0) {
                 // map to characters
-                if let images = images {
                 ForEach(images, id:\.self) { image in
-                        Image(uiImage: UIImage(named: image.absoluteString)!)
-                        .resizable().padding(1).aspectRatio(contentMode: .fill)
-                        .onDrag {
-                            NSItemProvider(item: image as NSSecureCoding, typeIdentifier: String(kUTTypeURL))
-                        }
-                    
-                }
+                    if let imgToShow = UIImage(named: image.absoluteString) {
+                        Image(uiImage: imgToShow)
+                            .resizable().padding(1).aspectRatio(contentMode: .fill)
+                            .onDrag {
+                                NSItemProvider(item: image as NSSecureCoding, typeIdentifier: String(kUTTypeURL))
+                            }
+                    }
                 }
             }.frame(minHeight: 20,maxHeight: 70, alignment: .topLeading) // Limit sticker bar size
         }

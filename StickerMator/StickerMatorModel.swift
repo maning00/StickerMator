@@ -6,13 +6,16 @@
 //
 
 import Foundation
+import Logging
+
+let logger = Logger(label: "StickerMator")
 
 
-struct StickerMatorModel {
+struct StickerMatorModel: Codable {
     var stickers = [Sticker]()
     
     
-    enum StickerSource: Hashable {
+    enum StickerSource: Hashable, Codable {
         init (_ imageData: Data) {
             self = .imageData(imageData)
         }
@@ -42,7 +45,7 @@ struct StickerMatorModel {
     
     
     // Sticker is an image
-    struct Sticker: Identifiable, Hashable {
+    struct Sticker: Identifiable, Hashable, Codable {
         let content: StickerSource
         var x: Int
         var y: Int
@@ -62,7 +65,20 @@ struct StickerMatorModel {
     
     init () {}
     
+    init(json: Data) throws {
+        self = try JSONDecoder().decode(StickerMatorModel.self, from: json)
+    }
+    
+    init(url: URL) throws {
+        let data = try Data(contentsOf: url)
+        self = try StickerMatorModel(json: data)
+    }
+    
     private var uniqueStickerId = 0
+    
+    func jsonEncode() throws -> Data {
+        return try JSONEncoder().encode(self)
+    }
     
     
     mutating func addSticker (content: StickerSource, at location:(x: Int, y: Int), size: (width: Int, height: Int)) {

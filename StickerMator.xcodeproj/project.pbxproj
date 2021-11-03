@@ -18,6 +18,7 @@
 		FBAB6B6D2731839E00FA4539 /* StickerSetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB6B6C2731839E00FA4539 /* StickerSetManager.swift */; };
 		FBAB6B6F2732619200FA4539 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB6B6E2732619200FA4539 /* ImagePicker.swift */; };
 		FBAB6B712732627800FA4539 /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB6B702732627800FA4539 /* Camera.swift */; };
+		FBAB6B7F2732958800FA4539 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = FBAB6B7E2732958800FA4539 /* Logging */; };
 		FBC250E1273118DA005DAD6C /* StickerBottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC250E0273118DA005DAD6C /* StickerBottomBar.swift */; };
 		FBC250E327311A2B005DAD6C /* StickerStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC250E227311A2B005DAD6C /* StickerStorage.swift */; };
 /* End PBXBuildFile section */
@@ -44,6 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FBAB6B7F2732958800FA4539 /* Logging in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,6 +112,9 @@
 			dependencies = (
 			);
 			name = StickerMator;
+			packageProductDependencies = (
+				FBAB6B7E2732958800FA4539 /* Logging */,
+			);
 			productName = StickerMator;
 			productReference = FB6A0618272F7CF4000DBA59 /* StickerMator.app */;
 			productType = "com.apple.product-type.application";
@@ -138,6 +143,9 @@
 				Base,
 			);
 			mainGroup = FB6A060F272F7CF4000DBA59;
+			packageReferences = (
+				FBAB6B7D2732958800FA4539 /* XCRemoteSwiftPackageReference "swift-log" */,
+			);
 			productRefGroup = FB6A0619272F7CF4000DBA59 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -379,6 +387,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FBAB6B7D2732958800FA4539 /* XCRemoteSwiftPackageReference "swift-log" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-log";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FBAB6B7E2732958800FA4539 /* Logging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FBAB6B7D2732958800FA4539 /* XCRemoteSwiftPackageReference "swift-log" */;
+			productName = Logging;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FB6A0610272F7CF4000DBA59 /* Project object */;
 }

@@ -37,44 +37,43 @@ struct StickerMatorView: View {
                     selectedSticker.removeAll()
                 }
             } label: {
-                Label("Delete", systemImage: "trash")
-                    .foregroundColor(.red)
-                }
-            }
+                Label("", systemImage: "trash").font(.system(size: 30))
+            }.foregroundColor(.red)
         }
+    }
     
     var documentBody: some View {
         GeometryReader { geometry in
             ZStack {
                 Color.white
-                    ForEach(document.stickers) { sticker in
-                        switch sticker.content {
-                        case .imageData(let data):
-                            if let uiImage = UIImage(data: data) {
-                                Image(uiImage: uiImage).position(position(for: sticker, in: geometry))
-                            }
-                        case .url(let url):
-                            if let uiImage = UIImage(named: url.absoluteString) {
-                                Image(uiImage: uiImage)
-                                    .resizable()
-                                    .border(Color.blue, width: selectedSticker.containsMatching(sticker) ? 4 : 0)
-                                    .frame(width: frameSize(for: sticker).width, height: frameSize(for: sticker).height)
-                                    .offset(selectedSticker.containsMatching(sticker) ? stickerGesturePanOffset : .zero) // if selected seprate panoff
-                                    .position(position(for: sticker, in: geometry))
-                                    .onTapGesture {
-                                        withAnimation {
-                                            selectedSticker.toggleMatching(sticker)
-                                        }
-                                    }.scaleEffect(selectedSticker.containsMatching(sticker) ? zoomScale * stickerGestureZoomScale : zoomScale)
-                                    .gesture(panGesture(for: sticker))
-                            }
+                ForEach(document.stickers) { sticker in
+                    switch sticker.content {
+                    case .imageData(let data):
+                        if let uiImage = UIImage(data: data) {
+                            Image(uiImage: uiImage).position(position(for: sticker, in: geometry))
+                        }
+                    case .url(let url):
+                        if let uiImage = UIImage(named: url.absoluteString) {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .border(Color.blue, width: selectedSticker.containsMatching(sticker) ? 4 : 0)
+                                .frame(width: frameSize(for: sticker).width, height: frameSize(for: sticker).height)
+                                .offset(selectedSticker.containsMatching(sticker) ? stickerGesturePanOffset : .zero) // if selected seprate panoff
+                                .position(position(for: sticker, in: geometry))
+                                .onTapGesture {
+                                    withAnimation {
+                                        selectedSticker.toggleMatching(sticker)
+                                    }
+                                }.scaleEffect(selectedSticker.containsMatching(sticker) ? zoomScale * stickerGestureZoomScale : zoomScale)
+                                .gesture(panGesture(for: sticker))
                         }
                     }
-                    .scaleEffect(zoomScale)
+                }
+                .scaleEffect(zoomScale)
             }
             .clipped()
             .onDrop(of: [String(kUTTypeURL)], isTargeted: nil) { providers, location in
-                    drop(providers: providers, at: location, in: geometry)
+                drop(providers: providers, at: location, in: geometry)
             }
             .gesture(zoomGesture().simultaneously(with: singleTapToDeselectAllSticker().simultaneously(with: panGesture())))
         }
@@ -172,15 +171,15 @@ struct StickerMatorView: View {
     private func panGesture(for sticker: StickerMatorModel.Sticker? = nil) -> some Gesture {
         if let sticker = sticker, selectedSticker.containsMatching(sticker) {
             
-        return DragGesture()
-            .updating($stickerGesturePanOffset) { latestvalue, stickerGesturePanOffset, _ in
-                stickerGesturePanOffset = latestvalue.translation
-            }
-            .onEnded { finalValue in
-                for sticker in selectedSticker {
-                    document.moveSticker(sticker, by: finalValue.translation / zoomScale)
+            return DragGesture()
+                .updating($stickerGesturePanOffset) { latestvalue, stickerGesturePanOffset, _ in
+                    stickerGesturePanOffset = latestvalue.translation
                 }
-            }
+                .onEnded { finalValue in
+                    for sticker in selectedSticker {
+                        document.moveSticker(sticker, by: finalValue.translation / zoomScale)
+                    }
+                }
         } else {
             return DragGesture()
                 .updating($gesturePanOffset) { latestvalue, gesturePanOffset, _ in
@@ -191,7 +190,7 @@ struct StickerMatorView: View {
                 }
         }
     }
-
+    
 }
 
 
