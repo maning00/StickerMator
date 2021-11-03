@@ -16,6 +16,8 @@
 		FB6A062E272FB0C9000DBA59 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6A062D272FB0C8000DBA59 /* Helper.swift */; };
 		FBAB6B6B27316F9700FA4539 /* StickerSetEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB6B6A27316F9700FA4539 /* StickerSetEditor.swift */; };
 		FBAB6B6D2731839E00FA4539 /* StickerSetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB6B6C2731839E00FA4539 /* StickerSetManager.swift */; };
+		FBAB6B6F2732619200FA4539 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB6B6E2732619200FA4539 /* ImagePicker.swift */; };
+		FBAB6B712732627800FA4539 /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB6B702732627800FA4539 /* Camera.swift */; };
 		FBC250E1273118DA005DAD6C /* StickerBottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC250E0273118DA005DAD6C /* StickerBottomBar.swift */; };
 		FBC250E327311A2B005DAD6C /* StickerStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC250E227311A2B005DAD6C /* StickerStorage.swift */; };
 /* End PBXBuildFile section */
@@ -31,6 +33,8 @@
 		FB6A062D272FB0C8000DBA59 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		FBAB6B6A27316F9700FA4539 /* StickerSetEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerSetEditor.swift; sourceTree = "<group>"; };
 		FBAB6B6C2731839E00FA4539 /* StickerSetManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerSetManager.swift; sourceTree = "<group>"; };
+		FBAB6B6E2732619200FA4539 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		FBAB6B702732627800FA4539 /* Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
 		FBC250E0273118DA005DAD6C /* StickerBottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerBottomBar.swift; sourceTree = "<group>"; };
 		FBC250E227311A2B005DAD6C /* StickerStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStorage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -70,6 +74,8 @@
 				FB6A062B272F8F1A000DBA59 /* StickerMatorViewModel.swift */,
 				FB6A061D272F7CF4000DBA59 /* StickerMatorView.swift */,
 				FBC250E0273118DA005DAD6C /* StickerBottomBar.swift */,
+				FBAB6B6E2732619200FA4539 /* ImagePicker.swift */,
+				FBAB6B702732627800FA4539 /* Camera.swift */,
 				FBAB6B6A27316F9700FA4539 /* StickerSetEditor.swift */,
 				FBAB6B6C2731839E00FA4539 /* StickerSetManager.swift */,
 				FBC250E227311A2B005DAD6C /* StickerStorage.swift */,
@@ -158,6 +164,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FBAB6B712732627800FA4539 /* Camera.swift in Sources */,
 				FBC250E327311A2B005DAD6C /* StickerStorage.swift in Sources */,
 				FBAB6B6B27316F9700FA4539 /* StickerSetEditor.swift in Sources */,
 				FB6A062A272F868D000DBA59 /* StickerMatorModel.swift in Sources */,
@@ -165,6 +172,7 @@
 				FBC250E1273118DA005DAD6C /* StickerBottomBar.swift in Sources */,
 				FBAB6B6D2731839E00FA4539 /* StickerSetManager.swift in Sources */,
 				FB6A062E272FB0C9000DBA59 /* Helper.swift in Sources */,
+				FBAB6B6F2732619200FA4539 /* ImagePicker.swift in Sources */,
 				FB6A062C272F8F1A000DBA59 /* StickerMatorViewModel.swift in Sources */,
 				FB6A061C272F7CF4000DBA59 /* StickerMatorApp.swift in Sources */,
 			);
@@ -300,6 +308,7 @@
 				DEVELOPMENT_TEAM = ZRZ8BS7EUF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "The camera will be used to import photo";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -329,6 +338,7 @@
 				DEVELOPMENT_TEAM = ZRZ8BS7EUF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "The camera will be used to import photo";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
