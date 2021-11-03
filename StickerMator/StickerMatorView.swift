@@ -13,14 +13,28 @@ typealias StickerSource = StickerMatorViewModel.StickerSource
 struct StickerMatorView: View {
     @ObservedObject var document: StickerMatorViewModel
     
-    
+    @State private var showBottomBar = false
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             ZStack(alignment: .topLeading) {
                 documentBody
                 deleteSelectedStickerButton
+            }.overlay {
+                if !showBottomBar {
+                    VStack {
+                        Spacer()
+                        HStack {
+                            AnimatedActionButton(systemImage: "photo.circle.fill",
+                                                 action: { showBottomBar.toggle() },
+                                                 labelFont: .system(size: 40))
+                            Spacer()
+                        }
+                    }
+                }
             }
-            StickerBottomBar()
+            if showBottomBar {
+                StickerBottomBar(showBottomBar: $showBottomBar)
+            }
         }
     }
     

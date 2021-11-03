@@ -11,6 +11,7 @@ import MobileCoreServices
 struct StickerBottomBar: View {
     
     @EnvironmentObject var store: StickerStorage
+    @Binding var showBottomBar: Bool
     
     var body: some View {
         HStack {
@@ -22,8 +23,6 @@ struct StickerBottomBar: View {
     @State private var chosenIndex = 0
     @State private var stickersetToEdit: StickerSet? = nil
     @State private var managing = false
-    
-    var labelFont: Font {.system(size: 40)}  // to set button size
     
     @ViewBuilder
     var contextMenu: some View {
@@ -38,6 +37,9 @@ struct StickerBottomBar: View {
             managing = true
         }
         gotoMenu
+        AnimatedActionButton(title: "Hide Bar", systemImage: "eye.slash") {
+            showBottomBar = false
+        }
     }
     
     var gotoMenu: some View {
@@ -57,7 +59,7 @@ struct StickerBottomBar: View {
     var controlButton: some View {
         AnimatedActionButton(systemImage: "circle.grid.cross",
                              action: { chosenIndex = (chosenIndex + 1) % store.stickerSets.count },
-                             labelFont: labelFont).contextMenu {contextMenu}
+                             labelFont: .system(size: 40)).contextMenu {contextMenu}
     }
     
     
@@ -92,12 +94,5 @@ struct ScrollingStickerView: View {
                 }
             }.frame(minHeight: 20,maxHeight: 70, alignment: .topLeading) // Limit sticker bar size
         }
-    }
-}
-
-
-struct BottomBar_Previews: PreviewProvider {
-    static var previews: some View {
-        StickerBottomBar()
     }
 }

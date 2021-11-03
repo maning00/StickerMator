@@ -67,7 +67,7 @@ struct StickerSetEditor: View {
                 imagePicker = .library
             }
         } label: {
-            Label("", systemImage: "doc.badge.plus").font(.system(size: 35))
+            Label("", systemImage: "plus.circle").font(.system(size: 45))
         }
     }
     
