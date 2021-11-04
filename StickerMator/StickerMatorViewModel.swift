@@ -10,16 +10,16 @@ import SwiftUI
 class StickerMatorViewModel: ObservableObject {
     @Published private(set) var stickerMator: StickerMatorModel
     
-    typealias StickerSource = StickerMatorModel.StickerSource
-    
     init () {
         stickerMator = StickerMatorModel()
     }
     
     var stickers: [StickerMatorModel.Sticker] { stickerMator.stickers }
     
-    func addSticker (_ sticker: StickerSource, at location:(x: Int, y: Int), size: CGSize) {
-        stickerMator.addSticker(content: sticker, at: location, size: (Int(size.width), Int(size.height)))
+    func addSticker (image: UIImage, at location:(x: Int, y: Int), size: CGSize) {
+        if let data = image.pngData() {
+            stickerMator.addSticker(imageData: data, at: location, size: (Int(size.width), Int(size.height)))
+        }
     }
     
     func moveSticker(_ sticker: StickerMatorModel.Sticker, by offset: CGSize) {

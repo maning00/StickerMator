@@ -10,7 +10,7 @@ import SwiftUI
 struct StickerSet: Identifiable, Hashable, Codable {
     let id: Int
     var name: String
-    var stickers: [URL]
+    var stickers: [String]
 }
 
 
@@ -39,8 +39,8 @@ class StickerStorage: ObservableObject {
         self.stickerSets = try JSONDecoder().decode([StickerSet].self, from: json)
     }
     
-    init(url: URL) throws {
-        let data = try Data(contentsOf: url)
+    init(url: String) throws {
+        let data = try Data(contentsOf: URL(string: url)!)
         self.stickerSets = try JSONDecoder().decode([StickerSet].self, from: data)
     }
     
@@ -50,45 +50,45 @@ class StickerStorage: ObservableObject {
         if stickerSets.isEmpty {
             logger.info("Using default stickers")
             addStickerSet(name: "Dogs", stickers: [
-                URL(string: "dog_01")!, URL(string: "dog_02")!, URL(string: "dog_03")!,
-                URL(string: "dog_04")!, URL(string: "dog_05")!, URL(string: "dog_06")!,
-                URL(string: "dog_07")!, URL(string: "dog_08")!, URL(string: "dog_09")!,
-                URL(string: "dog_10")!, URL(string: "dog_11")!, URL(string: "dog_12")!,
-                URL(string: "dog_13")!, URL(string: "dog_14")!, URL(string: "dog_15")!,
-                URL(string: "dog_16")!, URL(string: "dog_17")!
+                "dog_01", "dog_02", "dog_03",
+                "dog_04", "dog_05", "dog_06",
+                "dog_07", "dog_08", "dog_09",
+                "dog_10", "dog_11", "dog_12",
+                "dog_13", "dog_14", "dog_15",
+                "dog_16", "dog_17"
             ])
             addStickerSet(name: "IceBear", stickers: [
-                URL(string: "icebear_01")!, URL(string: "icebear_02")!, URL(string: "icebear_03")!,
-                URL(string: "icebear_04")!, URL(string: "icebear_05")!, URL(string: "icebear_06")!,
-                URL(string: "icebear_07")!, URL(string: "icebear_08")!, URL(string: "icebear_09")!,
-                URL(string: "icebear_10")!, URL(string: "icebear_11")!, URL(string: "icebear_12")!,
-                URL(string: "icebear_13")!, URL(string: "icebear_14")!, URL(string: "icebear_15")!,
-                URL(string: "icebear_16")!, URL(string: "icebear_17")!, URL(string: "icebear_18")!,
-                URL(string: "icebear_19")!, URL(string: "icebear_20")!, URL(string: "icebear_21")!,
-                URL(string: "icebear_22")!, URL(string: "icebear_23")!, URL(string: "icebear_24")!,
-                URL(string: "icebear_25")!, URL(string: "icebear_26")!
+                "icebear_01", "icebear_02", "icebear_03",
+                "icebear_04", "icebear_05", "icebear_06",
+                "icebear_07", "icebear_08", "icebear_09",
+                "icebear_10", "icebear_11", "icebear_12",
+                "icebear_13", "icebear_14", "icebear_15",
+                "icebear_16", "icebear_17", "icebear_18",
+                "icebear_19", "icebear_20", "icebear_21",
+                "icebear_22", "icebear_23", "icebear_24",
+                "icebear_25", "icebear_26"
             ])
             addStickerSet(name: "Cat", stickers: [
-                URL(string: "cat_01")!, URL(string: "cat_02")!, URL(string: "cat_03")!,
-                URL(string: "cat_04")!, URL(string: "cat_05")!, URL(string: "cat_06")!,
-                URL(string: "cat_07")!, URL(string: "cat_08")!, URL(string: "cat_09")!,
-                URL(string: "cat_10")!, URL(string: "cat_11")!, URL(string: "cat_12")!,
-                URL(string: "cat_13")!, URL(string: "cat_14")!, URL(string: "cat_15")!,
-                URL(string: "cat_16")!, URL(string: "cat_17")!, URL(string: "cat_18")!,
-                URL(string: "cat_19")!, URL(string: "cat_20")!, URL(string: "cat_21")!,
-                URL(string: "cat_22")!, URL(string: "cat_23")!, URL(string: "cat_24")!
+                "cat_01", "cat_02", "cat_03",
+                "cat_04", "cat_05", "cat_06",
+                "cat_07", "cat_08", "cat_09",
+                "cat_10", "cat_11", "cat_12",
+                "cat_13", "cat_14", "cat_15",
+                "cat_16", "cat_17", "cat_18",
+                "cat_19", "cat_20", "cat_21",
+                "cat_22", "cat_23", "cat_24"
             ])
             addStickerSet(name: "Penguin", stickers: [
-                URL(string: "penguin_01")!, URL(string: "penguin_02")!, URL(string: "penguin_03")!,
-                URL(string: "penguin_04")!, URL(string: "penguin_05")!, URL(string: "penguin_06")!,
-                URL(string: "penguin_07")!, URL(string: "penguin_08")!, URL(string: "penguin_09")!,
-                URL(string: "penguin_10")!, URL(string: "penguin_11")!, URL(string: "penguin_12")!,
-                URL(string: "penguin_13")!, URL(string: "penguin_14")!, URL(string: "penguin_15")!,
-                URL(string: "penguin_16")!, URL(string: "penguin_17")!, URL(string: "penguin_18")!,
-                URL(string: "penguin_19")!, URL(string: "penguin_20")!, URL(string: "penguin_21")!,
-                URL(string: "penguin_22")!, URL(string: "penguin_23")!, URL(string: "penguin_24")!,
-                URL(string: "penguin_25")!, URL(string: "penguin_26")!, URL(string: "penguin_27")!,
-                URL(string: "penguin_28")!
+                "penguin_01", "penguin_02", "penguin_03",
+                "penguin_04", "penguin_05", "penguin_06",
+                "penguin_07", "penguin_08", "penguin_09",
+                "penguin_10", "penguin_11", "penguin_12",
+                "penguin_13", "penguin_14", "penguin_15",
+                "penguin_16", "penguin_17", "penguin_18",
+                "penguin_19", "penguin_20", "penguin_21",
+                "penguin_22", "penguin_23", "penguin_24",
+                "penguin_25", "penguin_26", "penguin_27",
+                "penguin_28"
             ])
         }
     }
@@ -97,7 +97,7 @@ class StickerStorage: ObservableObject {
         return try JSONEncoder().encode(stickerSets)
     }
     
-    func addStickerSet(name: String, stickers: [URL] = [], at index: Int = 0) {
+    func addStickerSet(name: String, stickers: [String] = [], at index: Int = 0) {
         let unique = (stickerSets.max(by: { $0.id < $1.id })?.id ?? 0) + 1// get maxID + 1
         let safeIndex = min(max(index, 0), stickerSets.count)
         let set = StickerSet(id: unique, name: name, stickers: stickers)

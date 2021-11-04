@@ -42,7 +42,7 @@ struct StickerSetEditor: View {
                 try? data.write(to: filename)
             }
             if let urlStr = getSavedImage(named: userFileName) {
-                stickerSetToEdit.stickers.append(URL(string: urlStr)!)
+                stickerSetToEdit.stickers.append(urlStr)
             } else {
                 logger.warning("Get URL failed")
             }
@@ -76,7 +76,7 @@ struct StickerSetEditor: View {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))]) {
                 imagePickerMenu
                 ForEach(stickerSetToEdit.stickers, id:\.self) { url in
-                    if let uiImage = UIImage(named: url.absoluteString) {
+                    if let uiImage = UIImage(named: url) {
                         Image(uiImage: uiImage)
                             .resizable()
                             .frame(maxWidth: 80, maxHeight: 80)
@@ -84,7 +84,7 @@ struct StickerSetEditor: View {
                                 withAnimation {
                                     stickerSetToEdit.stickers.removeAll(where: {$0 == url})
                                     do {
-                                        try FileManager.default.removeItem(atPath: url.absoluteString)
+                                        try FileManager.default.removeItem(atPath: url)
                                     } catch let error {
                                         logger.error("\(error.localizedDescription): \(url)")
                                     }

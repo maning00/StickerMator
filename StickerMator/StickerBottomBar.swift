@@ -78,17 +78,17 @@ struct StickerBottomBar: View {
 }
 
 struct ScrollingStickerView: View {
-    let images: [URL]
+    let images: [String]
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(alignment: .top, spacing: 0) {
                 // map to characters
                 ForEach(images, id:\.self) { image in
-                    if let imgToShow = UIImage(named: image.absoluteString) {
+                    if let imgToShow = UIImage(named: image) {
                         Image(uiImage: imgToShow)
                             .resizable().padding(1).aspectRatio(contentMode: .fill)
                             .onDrag {
-                                NSItemProvider(item: image as NSSecureCoding, typeIdentifier: String(kUTTypeURL))
+                                NSItemProvider(object: image as NSString)
                             }
                     }
                 }

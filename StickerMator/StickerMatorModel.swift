@@ -15,46 +15,17 @@ struct StickerMatorModel: Codable {
     var stickers = [Sticker]()
     
     
-    enum StickerSource: Hashable, Codable {
-        init (_ imageData: Data) {
-            self = .imageData(imageData)
-        }
-        
-        init (_ url: URL) {
-            self = .url(url)
-        }
-        
-        case imageData(Data)
-        case url(URL)
-        
-        var url: URL? {
-            switch self {
-            case .url(let url): return url
-            default: return nil
-            }
-        }
-        
-        var imageData: Data? {
-            switch self {
-            case .imageData(let data):
-                return data
-            default: return nil
-            }
-        }
-    }
-    
-    
     // Sticker is an image
     struct Sticker: Identifiable, Hashable, Codable {
-        let content: StickerSource
+        var data: Data
         var x: Int
         var y: Int
         var width: Int
         var height: Int
         let id: Int
         
-        fileprivate init(content: StickerSource, x: Int, y: Int, width: Int, height: Int, id: Int) {
-            self.content = content
+        fileprivate init( data: Data, x: Int, y: Int, width: Int, height: Int, id: Int) {
+            self.data = data
             self.x = x
             self.y = y
             self.id = id
@@ -81,9 +52,9 @@ struct StickerMatorModel: Codable {
     }
     
     
-    mutating func addSticker (content: StickerSource, at location:(x: Int, y: Int), size: (width: Int, height: Int)) {
+    mutating func addSticker (imageData: Data, at location:(x: Int, y: Int), size: (width: Int, height: Int)) {
         uniqueStickerId += 1
-        stickers.append(Sticker(content: content, x: location.x, y: location.y, width: size.width, height: size.height, id: uniqueStickerId))
+        stickers.append(Sticker(data: imageData, x: location.x, y: location.y, width: size.width, height: size.height, id: uniqueStickerId))
     }
     
     mutating func removeSticker (_ sticker: Sticker) {

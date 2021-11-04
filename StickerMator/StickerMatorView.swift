@@ -8,8 +8,6 @@
 import SwiftUI
 import MobileCoreServices
 
-typealias StickerSource = StickerMatorViewModel.StickerSource
-
 struct StickerMatorView: View {
     @ObservedObject var document: StickerMatorViewModel
     
@@ -61,32 +59,25 @@ struct StickerMatorView: View {
             ZStack {
                 Color.white
                 ForEach(document.stickers) { sticker in
-                    switch sticker.content {
-                    case .imageData(let data):
-                        if let uiImage = UIImage(data: data) {
-                            Image(uiImage: uiImage).position(position(for: sticker, in: geometry))
-                        }
-                    case .url(let url):
-                        if let uiImage = UIImage(named: url.absoluteString) {
-                            Image(uiImage: uiImage)
-                                .resizable()
-                                .border(Color.blue, width: selectedSticker.containsMatching(sticker) ? 4 : 0)
-                                .frame(width: frameSize(for: sticker).width, height: frameSize(for: sticker).height)
-                                .offset(selectedSticker.containsMatching(sticker) ? stickerGesturePanOffset : .zero) // if selected seprate panoff
-                                .position(position(for: sticker, in: geometry))
-                                .onTapGesture {
-                                    withAnimation {
-                                        selectedSticker.toggleMatching(sticker)
-                                    }
-                                }.scaleEffect(selectedSticker.containsMatching(sticker) ? zoomScale * stickerGestureZoomScale : zoomScale)
-                                .gesture(panGesture(for: sticker))
-                        }
+                    if let uiImage = UIImage(data: sticker.data) {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .border(Color.blue, width: selectedSticker.containsMatching(sticker) ? 4 : 0)
+                            .frame(width: frameSize(for: sticker).width, height: frameSize(for: sticker).height)
+                            .offset(selectedSticker.containsMatching(sticker) ? stickerGesturePanOffset : .zero) // if selected seprate panoff
+                            .position(position(for: sticker, in: geometry))
+                            .onTapGesture {
+                                withAnimation {
+                                    selectedSticker.toggleMatching(sticker)
+                                }
+                            }.scaleEffect(selectedSticker.containsMatching(sticker) ? zoomScale * stickerGestureZoomScale : zoomScale)
+                            .gesture(panGesture(for: sticker))
                     }
                 }
                 .scaleEffect(zoomScale)
             }
             .clipped()
-            .onDrop(of: [String(kUTTypeURL)], isTargeted: nil) { providers, location in
+            .onDrop(of: [.url, .image, .plainText], isTargeted: nil) { providers, location in
                 drop(providers: providers, at: location, in: geometry)
             }
             .gesture(zoomGesture().simultaneously(with: singleTapToDeselectAllSticker().simultaneously(with: panGesture())))
@@ -107,10 +98,27 @@ struct StickerMatorView: View {
     
     // MARK: drag & drop
     private func drop(providers: [NSItemProvider], at location: CGPoint, in geometry: GeometryProxy) -> Bool {
-        providers.loadObjects(ofType: URL.self) { url in
-            print(url)
-            document.addSticker(StickerSource(url), at: convertToEmojiCoordinates(location, in: geometry), size: defaultStickerSize / zoomScale)
+        var found = providers.loadObjects(ofType: URL.self) { url in
+            if let data = try? Data(contentsOf: url) {
+                if let uiImage = UIImage(data: data) {
+                    document.addSticker(image: uiImage, at: convertToEmojiCoordinates(location, in: geometry), size: defaultStickerSize / zoomScale)
+                }
+            }
         }
+        if !found {
+            found = providers.loadObjects(ofType: UIImage.self) { image in
+                document.addSticker(image: image, at: convertToEmojiCoordinates(location, in: geometry), size: defaultStickerSize / zoomScale)
+                
+            }
+        }
+        if !found {
+            found = providers.loadObjects(ofType: String.self) { path in
+                if let uiImage = UIImage(named: path) {
+                document.addSticker(image: uiImage, at: convertToEmojiCoordinates(location, in: geometry), size: defaultStickerSize / zoomScale)
+                }
+            }
+        }
+        return found
     }
     
     
@@ -204,7 +212,6 @@ struct StickerMatorView: View {
                 }
         }
     }
-    
 }
 
 
