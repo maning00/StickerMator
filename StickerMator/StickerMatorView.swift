@@ -99,11 +99,7 @@ struct StickerMatorView: View {
     // MARK: drag & drop
     private func drop(providers: [NSItemProvider], at location: CGPoint, in geometry: GeometryProxy) -> Bool {
         var found = providers.loadObjects(ofType: URL.self) { url in
-            if let data = try? Data(contentsOf: url) {
-                if let uiImage = UIImage(data: data) {
-                    document.addSticker(image: uiImage, at: convertToEmojiCoordinates(location, in: geometry), size: defaultStickerSize / zoomScale)
-                }
-            }
+            document.addSticker(url: url, at: convertToEmojiCoordinates(location, in: geometry), size: defaultStickerSize / zoomScale)
         }
         if !found {
             found = providers.loadObjects(ofType: UIImage.self) { image in
@@ -113,9 +109,7 @@ struct StickerMatorView: View {
         }
         if !found {
             found = providers.loadObjects(ofType: String.self) { path in
-                if let uiImage = UIImage(named: path) {
-                document.addSticker(image: uiImage, at: convertToEmojiCoordinates(location, in: geometry), size: defaultStickerSize / zoomScale)
-                }
+                document.addSticker(path: path, at: convertToEmojiCoordinates(location, in: geometry), size: defaultStickerSize / zoomScale)
             }
         }
         return found
