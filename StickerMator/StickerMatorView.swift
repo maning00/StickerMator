@@ -25,6 +25,7 @@ struct StickerMatorView: View {
                             AnimatedActionButton(systemImage: "photo.circle.fill",
                                                  action: { showBottomBar.toggle() },
                                                  labelFont: .system(size: 40))
+                                .padding()
                             Spacer()
                         }
                     }
@@ -51,6 +52,7 @@ struct StickerMatorView: View {
             } label: {
                 Label("", systemImage: "trash").font(.system(size: 30))
             }.foregroundColor(.red)
+                .padding()
         }
     }
     

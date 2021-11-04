@@ -23,6 +23,7 @@ struct StickerBottomBar: View {
     @State private var chosenIndex = 0
     @State private var stickersetToEdit: StickerSet? = nil
     @State private var managing = false
+    @State private var showEditor = false
     
     @ViewBuilder
     var contextMenu: some View {
@@ -39,6 +40,9 @@ struct StickerBottomBar: View {
         gotoMenu
         AnimatedActionButton(title: "Hide Bar", systemImage: "eye.slash") {
             showBottomBar = false
+        }
+        AnimatedActionButton(title: "Filter", systemImage: "wand.and.rays") {
+            showEditor = true
         }
     }
     
@@ -73,6 +77,9 @@ struct StickerBottomBar: View {
         }
         .sheet(isPresented: $managing) {
             StickerSetManager()
+        }
+        .sheet(isPresented: $showEditor) {
+            ImageEditor(showImagePicker: true)
         }
     }
 }

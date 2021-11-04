@@ -138,3 +138,21 @@ func getDocumentsDirectory() -> URL {
     let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
     return paths[0]
 }
+
+
+struct IconAboveTextButton: View {
+    
+    var title: String
+    var systemImage: String? = nil
+    var textFont: Font? = nil
+    var iconSize: CGFloat? = nil
+    let action: () -> Void
+    
+    var body: some View {
+        VStack(spacing: 5) {
+            AnimatedActionButton(title: "", systemImage: systemImage, action: action, labelFont: .system(size: iconSize ?? 40))
+            Text(title).font(textFont)
+        }
+        
+    }
+}
