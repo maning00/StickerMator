@@ -79,7 +79,7 @@ struct StickerBottomBar: View {
             StickerSetManager()
         }
         .sheet(isPresented: $showEditor) {
-            ImageEditor(showImagePicker: true)
+            ImageEditor(showDialogue: .ImagePicker)
         }
     }
 }

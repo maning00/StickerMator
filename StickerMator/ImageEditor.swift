@@ -12,7 +12,6 @@ import CoreImage.CIFilterBuiltins
 struct ImageEditor: View {
     
     @State private var filterIntensity = 0.5
-    @State var showImagePicker = false
     @EnvironmentObject var store: StickerStorage
     @Environment(\.dismiss) var dissmiss
     
@@ -20,28 +19,34 @@ struct ImageEditor: View {
     @State private var currentFilter: CIFilter = CIFilter.sepiaTone()
     
     @State private var originalImage: UIImage?
+    enum DialogueType: Identifiable {
+        case ImagePicker
+        case SaveList
+        var id: DialogueType {self}
+    }
+    @State var showDialogue: DialogueType? = nil
     
     var context = CIContext()
     
     var body: some View {
         let intensity = Binding<Double> (
-                get: { self.filterIntensity },
-                set: {
-                    self.filterIntensity = $0
-                    self.processImage() // on change, refresh image
-                })
+            get: { self.filterIntensity },
+            set: {
+                self.filterIntensity = $0
+                self.processImage() // on change, refresh image
+            })
         
         NavigationView {
             VStack {
                 ZStack {
                     if imageToShow != nil {
-                    Image(uiImage: imageToShow!).resizable()
-                        .scaledToFit()
+                        Image(uiImage: imageToShow!).resizable()
+                            .scaledToFit()
                     }
                 }.padding()
                     .onTapGesture {
                         if imageToShow == nil {
-                            showImagePicker = true
+                            showDialogue = .ImagePicker
                         }
                     }
                 Spacer()
@@ -84,8 +89,13 @@ struct ImageEditor: View {
                     .padding()
                 }
             }.navigationTitle(Text("Filter"))
-                .sheet(isPresented: $showImagePicker) {
-                    ImagePicker(imageHandleFunc: loadImage)
+                .sheet(item: $showDialogue) { pickerType in
+                    switch pickerType {
+                    case .ImagePicker:
+                        ImagePicker(imageHandleFunc: loadImage)
+                    case .SaveList:
+                        saveList
+                    }
                 }
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -93,8 +103,55 @@ struct ImageEditor: View {
                             dissmiss()
                         }
                     }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Save") {
+                            showDialogue = .SaveList
+                        }
+                    }
                 }
         }.navigationBarTitleDisplayMode(.inline)
+    }
+    
+    var saveList: some View {
+        NavigationView {
+            List {
+                ForEach(store.stickerSets) { stickerset in
+                    VStack {
+                        AnimatedActionButton(title: stickerset.name) {
+                            saveImageToStickerSet(imageToShow, stickerSetToAdd: stickerset)
+                        }.foregroundColor(Color.primary)
+                    }
+                }
+            }.navigationTitle("Save To")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button("Cancel") {
+                            showDialogue = nil
+                        }
+                    }
+                }
+        }
+    }
+    
+    
+    private func saveImageToStickerSet(_ image: UIImage?, stickerSetToAdd: StickerSet) {
+        logger.info("saveImageToStickerSet catched image")
+        if let image = image {
+            let userFileName = UUID().uuidString
+            if let data = image.pngData() {
+                let filename = getDocumentsDirectory().appendingPathComponent(userFileName)
+                logger.info("Image saved to \(filename)")
+                try? data.write(to: filename)
+            }
+            if let urlStr = getSavedImage(named: userFileName) {
+                if let index = store.stickerSets.findIndex(of: stickerSetToAdd) {
+                    store.stickerSets[index].stickers.append(urlStr)
+                }
+            } else {
+                logger.warning("Get URL failed")
+            }
+        }
+        showDialogue = nil
     }
     
     func setFilter(_ filter: CIFilter) {
@@ -107,13 +164,13 @@ struct ImageEditor: View {
             originalImage = uiImage
             processImage()
         }
-        showImagePicker = false
+        showDialogue = nil
     }
     
     func processImage() {
         guard let originalImage = originalImage else { return }
         let beginImage = CIImage(image: originalImage)
-                    currentFilter.setValue(beginImage, forKey: kCIInputImageKey)
+        currentFilter.setValue(beginImage, forKey: kCIInputImageKey)
         
         // Keys that meet the needs of different filters
         let inputKeys = currentFilter.inputKeys
@@ -142,6 +199,6 @@ struct ImageEditor_Previews: PreviewProvider {
     
     static var previews: some View {
         ImageEditor(imageToShow: image)
-.previewInterfaceOrientation(.landscapeLeft)
+            .previewInterfaceOrientation(.landscapeLeft)
     }
 }
