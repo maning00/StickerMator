@@ -38,11 +38,11 @@ struct StickerBottomBar: View {
             managing = true
         }
         gotoMenu
+        AnimatedActionButton(title: "Filter", systemImage: "wand.and.rays") {
+                    showEditor = true
+                }
         AnimatedActionButton(title: "Hide Bar", systemImage: "eye.slash") {
             showBottomBar = false
-        }
-        AnimatedActionButton(title: "Filter", systemImage: "wand.and.rays") {
-            showEditor = true
         }
     }
     

@@ -50,13 +50,6 @@ struct StickerSetEditor: View {
         imagePicker = nil
     }
     
-    // get path URL string
-    func getSavedImage(named: String) -> String? {
-        if let dir = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) {
-            return URL(fileURLWithPath: dir.absoluteString).appendingPathComponent(named).path
-        }
-        return nil
-    }
     
     var imagePickerMenu: some View {
         Menu {
