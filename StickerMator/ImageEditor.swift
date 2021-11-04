@@ -14,16 +14,19 @@ struct ImageEditor: View {
     @State private var filterIntensity = 0.5
     @EnvironmentObject var store: StickerStorage
     @Environment(\.dismiss) var dissmiss
+    @ObservedObject var editorDocument: ImageEditorDocument
     
     @State var imageToShow: UIImage?
     @State private var currentFilter: CIFilter = CIFilter.sepiaTone()
-    
+    @State private var selectedFilter = Set<ImageEditorDocument.Filter>()
     @State private var originalImage: UIImage?
+    
     enum DialogueType: Identifiable {
         case ImagePicker
         case SaveList
         var id: DialogueType {self}
     }
+    
     @State var showDialogue: DialogueType? = nil
     
     var context = CIContext()
@@ -53,41 +56,21 @@ struct ImageEditor: View {
                 HStack {
                     Slider(value: intensity).padding(.horizontal)
                 }
-                ScrollView(.horizontal) {
+                ScrollView(.horizontal, showsIndicators: false) {
                     HStack(alignment: .top) {
-                        IconAboveTextButton(title: "SepiaTone", systemImage: "1.circle.fill", textFont: .system(size: 10), iconSize: 30) {
-                            setFilter(CIFilter.sepiaTone())
-                        }.padding(.horizontal)
-                        IconAboveTextButton(title: "Crystallize", systemImage: "2.circle.fill", textFont: .system(size: 10), iconSize: 30) {
-                            setFilter(CIFilter.crystallize())
-                        }.padding(.horizontal)
-                        IconAboveTextButton(title: "Edges", systemImage: "3.circle.fill", textFont: .system(size: 10), iconSize: 30) {
-                            setFilter(CIFilter.edges())
-                        }.padding(.horizontal)
-                        IconAboveTextButton(title: "Glass Lozenge", systemImage: "4.circle.fill", textFont: .system(size: 10), iconSize: 30) {
-                            setFilter(CIFilter.glassLozenge())
-                        }.padding(.horizontal)
-                        IconAboveTextButton(title: "ZoomBlur", systemImage: "5.circle.fill", textFont: .system(size: 10), iconSize: 30) {
-                            setFilter(CIFilter.edges())
-                        }.padding(.horizontal)
-                        IconAboveTextButton(title: "Pixellate", systemImage: "6.circle.fill", textFont: .system(size: 10), iconSize: 30) {
-                            setFilter(CIFilter.pixellate())
-                        }.padding(.horizontal)
-                        IconAboveTextButton(title: "Bloom", systemImage: "7.circle.fill", textFont: .system(size: 10), iconSize: 30) {
-                            setFilter(CIFilter.bloom())
-                        }.padding(.horizontal)
-                        IconAboveTextButton(title: "Unsharp Mask", systemImage: "8.circle.fill", textFont: .system(size: 10), iconSize: 30) {
-                            setFilter(CIFilter.unsharpMask())
-                        }.padding(.horizontal)
-                        IconAboveTextButton(title: "Gaussian Blur", systemImage: "9.circle.fill", textFont: .system(size: 10), iconSize: 30) {
-                            setFilter(CIFilter.gaussianBlur())
-                        }.padding(.horizontal)
-                        IconAboveTextButton(title: "Vignette", systemImage: "10.circle.fill", textFont: .system(size: 10), iconSize: 30) {
-                            setFilter(CIFilter.vignette())
-                        }.padding(.horizontal)
+                        ForEach(editorDocument.filters) { filter in
+                            IconAboveTextButton(title: filter.name , systemImage: String(filter.id)+".circle.fill", textFont: .system(size: 10), iconSize: 30) {
+                                setFilter(filter.ciFilter)
+                                selectedFilter.removeAll()
+                                selectedFilter.insert(filter)
+                            }.padding()
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .stroke(Color.blue, lineWidth: selectedFilter.containsMatching(filter) ? 2 : 0)
+                                )
+                        }
                     }
-                    .padding()
-                }
+                }.padding()
             }.navigationTitle(Text("Filter"))
                 .sheet(item: $showDialogue) { pickerType in
                     switch pickerType {
@@ -111,6 +94,8 @@ struct ImageEditor: View {
                 }
         }.navigationBarTitleDisplayMode(.inline)
     }
+    
+    // MARK: save option
     
     var saveList: some View {
         NavigationView {
@@ -153,6 +138,8 @@ struct ImageEditor: View {
         }
         showDialogue = nil
     }
+    
+    // MARK: filters
     
     func setFilter(_ filter: CIFilter) {
         currentFilter = filter
@@ -198,7 +185,7 @@ var image = UIImage(named: "dog_13")!
 struct ImageEditor_Previews: PreviewProvider {
     
     static var previews: some View {
-        ImageEditor(imageToShow: image)
+        ImageEditor(editorDocument: ImageEditorDocument(), imageToShow: image)
             .previewInterfaceOrientation(.landscapeLeft)
     }
 }

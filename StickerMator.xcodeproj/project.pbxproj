@@ -20,6 +20,7 @@
 		FBAB6B712732627800FA4539 /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB6B702732627800FA4539 /* Camera.swift */; };
 		FBAB6B7F2732958800FA4539 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = FBAB6B7E2732958800FA4539 /* Logging */; };
 		FBAB6B9B2733ADEE00FA4539 /* ImageEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB6B9A2733ADEE00FA4539 /* ImageEditor.swift */; };
+		FBAB6B9F27341DFF00FA4539 /* ImageEditorDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB6B9E27341DFF00FA4539 /* ImageEditorDocument.swift */; };
 		FBC250E1273118DA005DAD6C /* StickerBottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC250E0273118DA005DAD6C /* StickerBottomBar.swift */; };
 		FBC250E327311A2B005DAD6C /* StickerStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC250E227311A2B005DAD6C /* StickerStorage.swift */; };
 /* End PBXBuildFile section */
@@ -38,6 +39,7 @@
 		FBAB6B6E2732619200FA4539 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		FBAB6B702732627800FA4539 /* Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
 		FBAB6B9A2733ADEE00FA4539 /* ImageEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageEditor.swift; sourceTree = "<group>"; };
+		FBAB6B9E27341DFF00FA4539 /* ImageEditorDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageEditorDocument.swift; sourceTree = "<group>"; };
 		FBC250E0273118DA005DAD6C /* StickerBottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerBottomBar.swift; sourceTree = "<group>"; };
 		FBC250E227311A2B005DAD6C /* StickerStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStorage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -79,6 +81,7 @@
 				FB6A061D272F7CF4000DBA59 /* StickerMatorView.swift */,
 				FBC250E0273118DA005DAD6C /* StickerBottomBar.swift */,
 				FBAB6B9A2733ADEE00FA4539 /* ImageEditor.swift */,
+				FBAB6B9E27341DFF00FA4539 /* ImageEditorDocument.swift */,
 				FBAB6B6E2732619200FA4539 /* ImagePicker.swift */,
 				FBAB6B702732627800FA4539 /* Camera.swift */,
 				FBAB6B6A27316F9700FA4539 /* StickerSetEditor.swift */,
@@ -179,6 +182,7 @@
 				FBC250E327311A2B005DAD6C /* StickerStorage.swift in Sources */,
 				FBAB6B6B27316F9700FA4539 /* StickerSetEditor.swift in Sources */,
 				FB6A062A272F868D000DBA59 /* StickerMatorModel.swift in Sources */,
+				FBAB6B9F27341DFF00FA4539 /* ImageEditorDocument.swift in Sources */,
 				FB6A061E272F7CF4000DBA59 /* StickerMatorView.swift in Sources */,
 				FBC250E1273118DA005DAD6C /* StickerBottomBar.swift in Sources */,
 				FBAB6B9B2733ADEE00FA4539 /* ImageEditor.swift in Sources */,
