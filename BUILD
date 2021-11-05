@@ -29,6 +29,7 @@ xcrun xcodebuild \
     -configuration "${CONFIGURATION}" \
     -sdk "${SDK}" \
     -parallelizeTargets \
+	-allowProvisioningUpdates \
     -showBuildTimingSummary \
     -disableAutomaticPackageResolution \
     -derivedDataPath "${DERIVED_DATA_PATH}" \
