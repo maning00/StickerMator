@@ -24,7 +24,7 @@ EXPORT_OPTIONS_FILE="ExportOptions.plist"
 
 rm -rf "${RESULT_BUNDLE_PATH}"
 
-xcrun xcodebuild \
+xcrun xcodebuild build-for-testing\
     -scheme "${SCHEME}" \
     -configuration "${CONFIGURATION}" \
     -sdk "${SDK}" \
