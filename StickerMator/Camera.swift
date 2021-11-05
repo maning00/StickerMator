@@ -12,7 +12,7 @@ import SwiftUI
 struct Camera: UIViewControllerRepresentable {
     var imageHandleFunc: (UIImage?) -> Void
     
-    func makeUIViewController(context: Context) -> UIImagePickerController {  //create
+    func makeUIViewController(context: Context) -> UIImagePickerController {
         let picker = UIImagePickerController()
         picker.allowsEditing = true
         picker.sourceType = .camera

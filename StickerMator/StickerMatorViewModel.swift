@@ -26,10 +26,10 @@ class StickerMatorViewModel: ObservableObject {
     func addSticker (url: URL, at location:(x: Int, y: Int), size: CGSize) {
         let session = URLSession.shared
         let publisher = session.dataTaskPublisher(for: url)
-            .map {(data, urlResponse) in UIImage(data: data)}
+            .map {(data, _) in UIImage(data: data)}
             .replaceError(with: nil)
             .receive(on: DispatchQueue.main)
-        let _ = publisher.sink { [weak self] image in
+        _ = publisher.sink { [weak self] image in
             if let uiImage = image {
                 self?.addSticker (image: uiImage, at: (x: location.x, y: location.y), size: size)
             }
@@ -38,7 +38,7 @@ class StickerMatorViewModel: ObservableObject {
     
     func addSticker (path: String, at location:(x: Int, y: Int), size: CGSize) {
         if let uiImage = UIImage(named: path) {
-            self.addSticker (image: uiImage, at: (x: location.x, y: location.y), size: size)
+            self.addSticker(image: uiImage, at: (x: location.x, y: location.y), size: size)
         }
     }
     

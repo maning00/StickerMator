@@ -26,7 +26,7 @@ struct StickerSetManager: View {
                 .onDelete { indexSet in
                     store.stickerSets.remove(atOffsets: indexSet)
                     if store.stickerSets.isEmpty {
-                        store.addStickerSet(name: "Empty",at: 1)
+                        store.addStickerSet(name: "Empty", at: 1)
                     }
                 }
                 .onMove { indexSet, newOffset in        // edit sequence

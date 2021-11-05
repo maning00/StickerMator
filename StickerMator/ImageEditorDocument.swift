@@ -19,10 +19,10 @@ class ImageEditorDocument: ObservableObject {
     @Published private(set) var filters: [Filter]
     
     init() {
-        self.filters = [Filter(name:"SepiaTone", id: 1, ciFilter: CIFilter.sepiaTone()),
+        self.filters = [Filter(name: "SepiaTone", id: 1, ciFilter: CIFilter.sepiaTone()),
                         Filter(name: "Crystallize", id: 2, ciFilter: CIFilter.crystallize()),
                         Filter(name: "Edges", id: 3, ciFilter: CIFilter.edges()),
-                        Filter(name: "Glass Lozenge", id:4, ciFilter: CIFilter.glassLozenge()),
+                        Filter(name: "Glass Lozenge", id: 4, ciFilter: CIFilter.glassLozenge()),
                         Filter(name: "ZoomBlur", id: 5, ciFilter: CIFilter.zoomBlur()),
                         Filter(name: "Pixellate", id: 6, ciFilter: CIFilter.pixellate()),
                         Filter(name: "Bloom", id: 7, ciFilter: CIFilter.bloom()),

@@ -68,7 +68,7 @@ struct StickerSetEditor: View {
         Section(header: Text("Tap + to add, double tap to delete")) {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))]) {
                 imagePickerMenu
-                ForEach(stickerSetToEdit.stickers, id:\.self) { url in
+                ForEach(stickerSetToEdit.stickers, id: \.self) { url in
                     if let uiImage = UIImage(named: url) {
                         Image(uiImage: uiImage)
                             .resizable()

@@ -54,7 +54,8 @@ struct StickerMatorModel: Codable {
     
     mutating func addSticker (imageData: Data, at location:(x: Int, y: Int), size: (width: Int, height: Int)) {
         uniqueStickerId += 1
-        stickers.append(Sticker(data: imageData, x: location.x, y: location.y, width: size.width, height: size.height, id: uniqueStickerId))
+        stickers.append(Sticker(data: imageData, x: location.x, y: location.y,
+                                width: size.width, height: size.height, id: uniqueStickerId))
     }
     
     mutating func removeSticker (_ sticker: Sticker) {

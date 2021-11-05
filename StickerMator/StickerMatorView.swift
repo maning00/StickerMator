@@ -66,7 +66,7 @@ struct StickerMatorView: View {
                             .resizable()
                             .border(Color.blue, width: selectedSticker.containsMatching(sticker) ? 4 : 0)
                             .frame(width: frameSize(for: sticker).width, height: frameSize(for: sticker).height)
-                            .offset(selectedSticker.containsMatching(sticker) ? stickerGesturePanOffset : .zero) // if selected seprate panoff
+                            .offset(selectedSticker.containsMatching(sticker) ? stickerGesturePanOffset : .zero)
                             .position(position(for: sticker, in: geometry))
                             .onTapGesture {
                                 withAnimation {
@@ -82,7 +82,9 @@ struct StickerMatorView: View {
             .onDrop(of: [.url, .image, .plainText], isTargeted: nil) { providers, location in
                 drop(providers: providers, at: location, in: geometry)
             }
-            .gesture(zoomGesture().simultaneously(with: singleTapToDeselectAllSticker().simultaneously(with: panGesture())))
+            .gesture(zoomGesture()
+                        .simultaneously(with: singleTapToDeselectAllSticker()
+                                            .simultaneously(with: panGesture())))
         }
     }
     
@@ -101,17 +103,20 @@ struct StickerMatorView: View {
     // MARK: drag & drop
     private func drop(providers: [NSItemProvider], at location: CGPoint, in geometry: GeometryProxy) -> Bool {
         var found = providers.loadObjects(ofType: URL.self) { url in
-            document.addSticker(url: url, at: convertToEmojiCoordinates(location, in: geometry), size: defaultStickerSize / zoomScale)
+            document.addSticker(url: url, at: convertToEmojiCoordinates(location, in: geometry),
+                                size: defaultStickerSize / zoomScale)
         }
         if !found {
             found = providers.loadObjects(ofType: UIImage.self) { image in
-                document.addSticker(image: image, at: convertToEmojiCoordinates(location, in: geometry), size: defaultStickerSize / zoomScale)
+                document.addSticker(image: image, at: convertToEmojiCoordinates(location, in: geometry),
+                                    size: defaultStickerSize / zoomScale)
                 
             }
         }
         if !found {
             found = providers.loadObjects(ofType: String.self) { path in
-                document.addSticker(path: path, at: convertToEmojiCoordinates(location, in: geometry), size: defaultStickerSize / zoomScale)
+                document.addSticker(path: path, at: convertToEmojiCoordinates(location, in: geometry),
+                                    size: defaultStickerSize / zoomScale)
             }
         }
         return found
@@ -138,7 +143,7 @@ struct StickerMatorView: View {
     private func convertFromEmojiCoordinates(_ location: (x: Int, y: Int), in geometry: GeometryProxy) -> CGPoint {
         return CGPoint(
             x: CGFloat(location.x) * zoomScale + panOffset.width,
-            y:  CGFloat(location.y) * zoomScale + panOffset.height
+            y: CGFloat(location.y) * zoomScale + panOffset.height
         )
     }
     

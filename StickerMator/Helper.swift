@@ -17,7 +17,8 @@ extension Collection where Element: Identifiable {
 
 // from CS193p
 extension Array where Element == NSItemProvider {
-    func loadObjects<T>(ofType theType: T.Type, firstOnly: Bool = false, using load: @escaping (T) -> Void) -> Bool where T: NSItemProviderReading {
+    func loadObjects<T>(ofType theType: T.Type, firstOnly: Bool = false,
+                        using load: @escaping (T) -> Void) -> Bool where T: NSItemProviderReading {
         if let provider = first(where: { $0.canLoadObject(ofClass: theType) }) {
             provider.loadObject(ofClass: theType) { object, error in
                 if let value = object as? T {
@@ -30,7 +31,8 @@ extension Array where Element == NSItemProvider {
         }
         return false
     }
-    func loadObjects<T>(ofType theType: T.Type, firstOnly: Bool = false, using load: @escaping (T) -> Void) -> Bool where T: _ObjectiveCBridgeable, T._ObjectiveCType: NSItemProviderReading {
+    func loadObjects<T>(ofType theType: T.Type, firstOnly: Bool = false,
+                        using load: @escaping (T) -> Void) -> Bool where T: _ObjectiveCBridgeable, T._ObjectiveCType: NSItemProviderReading {
         if let provider = first(where: { $0.canLoadObject(ofClass: theType) }) {
             let _ = provider.loadObject(ofClass: theType) { object, error in
                 if let value = object {
@@ -43,29 +45,31 @@ extension Array where Element == NSItemProvider {
         }
         return false
     }
-    func loadFirstObject<T>(ofType theType: T.Type, using load: @escaping (T) -> Void) -> Bool where T: NSItemProviderReading {
+    func loadFirstObject<T>(ofType theType: T.Type,
+                            using load: @escaping (T) -> Void) -> Bool where T: NSItemProviderReading {
         loadObjects(ofType: theType, firstOnly: true, using: load)
     }
-    func loadFirstObject<T>(ofType theType: T.Type, using load: @escaping (T) -> Void) -> Bool where T: _ObjectiveCBridgeable, T._ObjectiveCType: NSItemProviderReading {
+    func loadFirstObject<T>(ofType theType: T.Type,
+                            using load: @escaping (T) -> Void) -> Bool where T: _ObjectiveCBridgeable, T._ObjectiveCType: NSItemProviderReading {
         loadObjects(ofType: theType, firstOnly: true, using: load)
     }
 }
 
 
 extension CGSize {
-    static func -(left: Self, right: Self) -> CGSize {
+    static func - (left: Self, right: Self) -> CGSize {
         CGSize(width: left.width - right.width, height: left.height - right.height)
     }
     
-    static func +(left: Self, right: Self) -> CGSize {
+    static func + (left: Self, right: Self) -> CGSize {
         CGSize(width: left.width + right.width, height: left.height + right.height)
     }
     
-    static func *(left: Self, right: CGFloat) -> CGSize {
+    static func * (left: Self, right: CGFloat) -> CGSize {
         CGSize(width: left.width * right, height: left.height * right)
     }
     
-    static func /(left: Self, right: CGFloat) -> CGSize {
+    static func / (left: Self, right: CGFloat) -> CGSize {
         CGSize(width: left.width / right, height: left.height / right)
     }
 }

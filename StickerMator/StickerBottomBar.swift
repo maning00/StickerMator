@@ -27,7 +27,7 @@ struct StickerBottomBar: View {
     
     @ViewBuilder
     var contextMenu: some View {
-        AnimatedActionButton(title: "Edit", systemImage: "pencil.circle"){
+        AnimatedActionButton(title: "Edit", systemImage: "pencil.circle") {
             stickersetToEdit = store.stickerSet(at: chosenIndex)
         }
         AnimatedActionButton(title: "New", systemImage: "plus.circle") {
@@ -48,7 +48,7 @@ struct StickerBottomBar: View {
     
     var gotoMenu: some View {
         Menu {
-            ForEach (store.stickerSets) { palette in
+            ForEach(store.stickerSets) { palette in
                 AnimatedActionButton(title: palette.name) {
                     if let index = store.stickerSets.findIndex(of: palette) {
                         chosenIndex = index
@@ -72,14 +72,14 @@ struct StickerBottomBar: View {
             Text(stickerSet.name)
             ScrollingStickerView(images: store.stickerSet(at: chosenIndex).stickers)
         }
-        .popover(item: $stickersetToEdit) { stickerset in
+        .popover(item: $stickersetToEdit) { _ in
             StickerSetEditor(stickerSetToEdit: $store.stickerSets[chosenIndex])
         }
         .sheet(isPresented: $managing) {
             StickerSetManager()
         }
         .sheet(isPresented: $showEditor) {
-            ImageEditor(editorDocument: ImageEditorDocument(), showDialogue: .ImagePicker)
+            ImageEditor(editorDocument: ImageEditorDocument(), showDialogue: .imagePicker)
         }
     }
 }
@@ -90,7 +90,7 @@ struct ScrollingStickerView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(alignment: .top, spacing: 0) {
                 // map to characters
-                ForEach(images, id:\.self) { image in
+                ForEach(images, id: \.self) { image in
                     if let imgToShow = UIImage(named: image) {
                         Image(uiImage: imgToShow)
                             .resizable().padding(1).aspectRatio(contentMode: .fill)
@@ -99,7 +99,7 @@ struct ScrollingStickerView: View {
                             }
                     }
                 }
-            }.frame(minHeight: 20,maxHeight: 70, alignment: .topLeading) // Limit sticker bar size
+            }.frame(minHeight: 20, maxHeight: 70, alignment: .topLeading) // Limit sticker bar size
         }
     }
 }

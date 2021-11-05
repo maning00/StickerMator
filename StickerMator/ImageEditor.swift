@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import CoreImage
 import CoreImage.CIFilterBuiltins
 
 struct ImageEditor: View {
@@ -22,8 +21,8 @@ struct ImageEditor: View {
     @State private var originalImage: UIImage?
     
     enum DialogueType: Identifiable {
-        case ImagePicker
-        case SaveList
+        case imagePicker
+        case saveList
         var id: DialogueType {self}
     }
     
@@ -32,7 +31,7 @@ struct ImageEditor: View {
     var context = CIContext()
     
     var body: some View {
-        let intensity = Binding<Double> (
+        let intensity = Binding<Double>(
             get: { self.filterIntensity },
             set: {
                 self.filterIntensity = $0
@@ -49,7 +48,7 @@ struct ImageEditor: View {
                 }.padding()
                     .onTapGesture {
                         if imageToShow == nil {
-                            showDialogue = .ImagePicker
+                            showDialogue = .imagePicker
                         }
                     }
                 Spacer()
@@ -59,7 +58,7 @@ struct ImageEditor: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(alignment: .top) {
                         ForEach(editorDocument.filters) { filter in
-                            IconAboveTextButton(title: filter.name , systemImage: String(filter.id)+".circle.fill", textFont: .system(size: 10), iconSize: 30) {
+                            IconAboveTextButton(title: filter.name, systemImage: String(filter.id)+".circle.fill", textFont: .system(size: 10), iconSize: 30) {
                                 setFilter(filter.ciFilter)
                                 selectedFilter.removeAll()
                                 selectedFilter.insert(filter)
@@ -74,9 +73,9 @@ struct ImageEditor: View {
             }.navigationTitle(Text("Filter"))
                 .sheet(item: $showDialogue) { pickerType in
                     switch pickerType {
-                    case .ImagePicker:
+                    case .imagePicker:
                         ImagePicker(imageHandleFunc: loadImage)
-                    case .SaveList:
+                    case .saveList:
                         saveList
                     }
                 }
@@ -88,7 +87,7 @@ struct ImageEditor: View {
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button("Save") {
-                            showDialogue = .SaveList
+                            showDialogue = .saveList
                         }
                     }
                 }
@@ -168,7 +167,7 @@ struct ImageEditor: View {
             currentFilter.setValue(filterIntensity * 20, forKey: kCIInputRadiusKey)
         }
         if inputKeys.contains(kCIInputScaleKey) {
-            currentFilter.setValue(filterIntensity * 10 , forKey: kCIInputScaleKey)
+            currentFilter.setValue(filterIntensity * 10, forKey: kCIInputScaleKey)
         }
         
         guard let outputImage = currentFilter.outputImage else { return }

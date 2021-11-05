@@ -12,7 +12,7 @@ import SwiftUI
 struct ImagePicker: UIViewControllerRepresentable {
     var imageHandleFunc: (UIImage?) -> Void
     
-    func makeUIViewController(context: Context) -> UIImagePickerController {  //create
+    func makeUIViewController(context: Context) -> UIImagePickerController {
         let picker = UIImagePickerController()
         picker.allowsEditing = true
         picker.delegate = context.coordinator
@@ -32,7 +32,8 @@ struct ImagePicker: UIViewControllerRepresentable {
             self.imageHandleFunc = imageHandleFunc
         }
         
-        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        func imagePickerController(_ picker: UIImagePickerController,
+                                   didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             if let image = info[.editedImage] as? UIImage {
                 self.imageHandleFunc(image)
             } else {
