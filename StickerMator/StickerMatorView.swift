@@ -55,7 +55,7 @@ struct StickerMatorView: View {
                     Color.white
                 }
                 ForEach(document.stickers) { sticker in
-                    if let uiImage = UIImage(data: sticker.data) {
+                    if let uiImage = UIImage(named: sticker.data.absoluteString) {
                         Image(uiImage: uiImage)
                             .resizable()
                             .border(Color.blue, width: selectedSticker.containsMatching(sticker) ? 4 : 0)
@@ -112,13 +112,7 @@ struct StickerMatorView: View {
     private func handlePickedPhoto(_ image: UIImage?) {
         logger.info("handlePickedPhoto catched image")
         if let image = image {
-            let userFileName = UUID().uuidString
-            if let data = image.pngData() {
-                let filename = getDocumentsDirectory().appendingPathComponent(userFileName)
-                logger.info("Image saved to \(filename)")
-                try? data.write(to: filename)
-            }
-            if let urlStr = getSavedImage(named: userFileName) {
+            if let urlStr = saveFileAndReturnURLString(image: image) {
                 document.setMainImage(url: URL(string: urlStr), undoManager: undoManager)
             } else {
                 logger.warning("Get URL failed")
