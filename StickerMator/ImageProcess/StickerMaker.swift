@@ -8,16 +8,16 @@
 import SwiftUI
 import CoreImage.CIFilterBuiltins
 
-struct ImageEditor: View {
+struct StickerMaker: View {
     
     @State private var filterIntensity = 0.5
     @EnvironmentObject var store: StickerStorage
     @Environment(\.dismiss) var dissmiss
-    @ObservedObject var editorDocument: ImageEditorDocument
+    @ObservedObject var editorDocument: StickerMakerDocument
     
     @State var imageToShow: UIImage?
     @State private var currentFilter: CIFilter = CIFilter.sepiaTone()
-    @State private var selectedFilter = Set<ImageEditorDocument.Filter>()
+    @State private var selectedFilter = Set<StickerMakerDocument.Filter>()
     @State private var originalImage: UIImage?
     
     enum DialogueType: Identifiable {
@@ -57,7 +57,7 @@ struct ImageEditor: View {
                 }
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(alignment: .top) {
-                        IconAboveTextButton(title: "Remove Background", systemImage: "0.circle.fill", textFont: .system(size: 10), iconSize: 30) {
+                        IconAboveTextButton(title: "Remove Background", systemImage: "person.crop.rectangle", textFont: .system(size: 10), iconSize: 30) {
                             if let originalImage = originalImage {
                                 let removal = BackgroundRemoval(input: originalImage)
                                 imageToShow = removal.getResult()
@@ -81,7 +81,7 @@ struct ImageEditor: View {
                         
                     }
                 }.padding()
-            }.navigationTitle(Text("Filter"))
+            }.navigationTitle(Text("StickerMaker"))
                 .sheet(item: $showDialogue) { pickerType in
                     switch pickerType {
                     case .imagePicker:
@@ -195,7 +195,7 @@ var image = UIImage(named: "dog_13")!
 struct ImageEditor_Previews: PreviewProvider {
     
     static var previews: some View {
-        ImageEditor(editorDocument: ImageEditorDocument(), imageToShow: image)
+        StickerMaker(editorDocument: StickerMakerDocument(), imageToShow: image)
             .previewInterfaceOrientation(.landscapeLeft)
     }
 }

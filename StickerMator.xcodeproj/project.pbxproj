@@ -23,8 +23,8 @@
 		FBAB6B6F2732619200FA4539 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB6B6E2732619200FA4539 /* ImagePicker.swift */; };
 		FBAB6B712732627800FA4539 /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB6B702732627800FA4539 /* Camera.swift */; };
 		FBAB6B7F2732958800FA4539 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = FBAB6B7E2732958800FA4539 /* Logging */; };
-		FBAB6B9B2733ADEE00FA4539 /* ImageEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB6B9A2733ADEE00FA4539 /* ImageEditor.swift */; };
-		FBAB6B9F27341DFF00FA4539 /* ImageEditorDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB6B9E27341DFF00FA4539 /* ImageEditorDocument.swift */; };
+		FBAB6B9B2733ADEE00FA4539 /* StickerMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB6B9A2733ADEE00FA4539 /* StickerMaker.swift */; };
+		FBAB6B9F27341DFF00FA4539 /* StickerMakerDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB6B9E27341DFF00FA4539 /* StickerMakerDocument.swift */; };
 		FBC250E1273118DA005DAD6C /* StickerBottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC250E0273118DA005DAD6C /* StickerBottomBar.swift */; };
 		FBC250E327311A2B005DAD6C /* StickerStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC250E227311A2B005DAD6C /* StickerStorage.swift */; };
 /* End PBXBuildFile section */
@@ -47,8 +47,8 @@
 		FBAB6B6C2731839E00FA4539 /* StickerSetManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerSetManager.swift; sourceTree = "<group>"; };
 		FBAB6B6E2732619200FA4539 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		FBAB6B702732627800FA4539 /* Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
-		FBAB6B9A2733ADEE00FA4539 /* ImageEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageEditor.swift; sourceTree = "<group>"; };
-		FBAB6B9E27341DFF00FA4539 /* ImageEditorDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageEditorDocument.swift; sourceTree = "<group>"; };
+		FBAB6B9A2733ADEE00FA4539 /* StickerMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerMaker.swift; sourceTree = "<group>"; };
+		FBAB6B9E27341DFF00FA4539 /* StickerMakerDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerMakerDocument.swift; sourceTree = "<group>"; };
 		FBC250E0273118DA005DAD6C /* StickerBottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerBottomBar.swift; sourceTree = "<group>"; };
 		FBC250E227311A2B005DAD6C /* StickerStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStorage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -125,8 +125,8 @@
 			isa = PBXGroup;
 			children = (
 				FB7CF02B273556DE00D3FAB0 /* DeepLabV3.mlkitmodel */,
-				FBAB6B9A2733ADEE00FA4539 /* ImageEditor.swift */,
-				FBAB6B9E27341DFF00FA4539 /* ImageEditorDocument.swift */,
+				FBAB6B9A2733ADEE00FA4539 /* StickerMaker.swift */,
+				FBAB6B9E27341DFF00FA4539 /* StickerMakerDocument.swift */,
 				FB7CF029273555A200D3FAB0 /* BackgroundRemoval.swift */,
 			);
 			path = ImageProcess;
@@ -216,11 +216,11 @@
 				FB7CF02C273556DE00D3FAB0 /* DeepLabV3.mlkitmodel in Sources */,
 				FB6A062A272F868D000DBA59 /* StickerMatorModel.swift in Sources */,
 				FB7CF027273552FF00D3FAB0 /* MLMultiArray+Image.swift in Sources */,
-				FBAB6B9F27341DFF00FA4539 /* ImageEditorDocument.swift in Sources */,
+				FBAB6B9F27341DFF00FA4539 /* StickerMakerDocument.swift in Sources */,
 				FB6A061E272F7CF4000DBA59 /* StickerMatorView.swift in Sources */,
 				FB7CF02A273555A200D3FAB0 /* BackgroundRemoval.swift in Sources */,
 				FBC250E1273118DA005DAD6C /* StickerBottomBar.swift in Sources */,
-				FBAB6B9B2733ADEE00FA4539 /* ImageEditor.swift in Sources */,
+				FBAB6B9B2733ADEE00FA4539 /* StickerMaker.swift in Sources */,
 				FBAB6B6D2731839E00FA4539 /* StickerSetManager.swift in Sources */,
 				FB6A062E272FB0C9000DBA59 /* Helper.swift in Sources */,
 				FB6A061C272F7CF4000DBA59 /* StickerMatorApp.swift in Sources */,

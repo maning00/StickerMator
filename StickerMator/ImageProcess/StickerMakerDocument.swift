@@ -1,5 +1,5 @@
 //
-//  ImageEditorDocument.swift
+//  StickerMakerDocument.swift
 //  StickerMator
 //
 //  Created by Ning Ma on 11/4/21.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class ImageEditorDocument: ObservableObject {
+class StickerMakerDocument: ObservableObject {
     
     struct Filter: Identifiable, Hashable {
         var name: String

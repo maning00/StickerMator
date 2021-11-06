@@ -38,7 +38,7 @@ struct StickerBottomBar: View {
             managing = true
         }
         gotoMenu
-        AnimatedActionButton(title: "Filter", systemImage: "wand.and.rays") {
+        AnimatedActionButton(title: "Sticker Maker", systemImage: "wand.and.rays") {
                     showEditor = true
                 }
         AnimatedActionButton(title: "Hide Bar", systemImage: "eye.slash") {
@@ -79,7 +79,7 @@ struct StickerBottomBar: View {
             StickerSetManager()
         }
         .sheet(isPresented: $showEditor) {
-            ImageEditor(editorDocument: ImageEditorDocument(), showDialogue: .imagePicker)
+            StickerMaker(editorDocument: StickerMakerDocument(), showDialogue: .imagePicker)
         }
     }
 }

@@ -179,10 +179,10 @@ struct AdaptiveMenu: ViewModifier {
     
     func body(content: Content) -> some View {
         if compact {
-            Button { } label: {
-                Image(systemName: "ellipsis.circle")
-            }.contextMenu {
+            Menu {
                 content
+            } label: {
+                Image(systemName: "ellipsis.circle")
             }
         } else {
             content
