@@ -13,7 +13,7 @@ let logger = Logger(label: "StickerMator")
 
 struct StickerMatorModel: Codable {
     var stickers = [Sticker]()
-    
+    var mainImage: URL?  // main image to edit
     
     // Sticker is an image
     struct Sticker: Identifiable, Hashable, Codable {

@@ -197,3 +197,10 @@ extension View {
         }
     }
 }
+
+
+enum ImagePickerType: Identifiable {
+    case camera
+    case library
+    var id: ImagePickerType {self}
+}

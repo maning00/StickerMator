@@ -14,12 +14,6 @@ struct StickerSetEditor: View {
     @State private var imagePicker: ImagePickerType? = nil
     @Environment(\.dismiss) var dissmiss
     
-    enum ImagePickerType: Identifiable {
-        case camera
-        case library
-        var id: ImagePickerType {self}
-    }
-    
     var body: some View {
         Form {
             Section(header: Text("name")) {

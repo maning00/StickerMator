@@ -37,12 +37,22 @@ class StickerMatorViewModel: ReferenceFileDocument {
     }
     
     @Published private(set) var stickerMator: StickerMatorModel
+    @Published var mainImage: UIImage?
     
     init () {
         stickerMator = StickerMatorModel()
     }
     
     var stickers: [StickerMatorModel.Sticker] { stickerMator.stickers }
+    
+    // MARK: - Main Image
+    func setMainImage(url: URL?, undoManager: UndoManager?) {
+        undoPerform(with: undoManager) {
+            stickerMator.mainImage = url
+            guard let urlString = url?.absoluteString else { return }
+            mainImage = UIImage(named: urlString)
+        }
+    }
     
     
     // MARK: - Sticker operation

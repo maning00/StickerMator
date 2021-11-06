@@ -12,6 +12,8 @@ struct StickerMatorView: View {
     @ObservedObject var document: StickerMatorViewModel
     @Environment(\.undoManager) var undoManager
     @State private var showBottomBar = false
+    @State private var showImageChooseOption = false
+    @State private var imagePicker: ImagePickerType? = nil
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -45,7 +47,13 @@ struct StickerMatorView: View {
     var documentBody: some View {
         GeometryReader { geometry in
             ZStack {
-                Color.white
+                if let mainImage = document.mainImage {
+                    Image(uiImage: mainImage)
+                        .scaleEffect(zoomScale)
+                        .position(convertFromEmojiCoordinates((0,0), in: geometry))
+                } else {
+                    Color.white
+                }
                 ForEach(document.stickers) { sticker in
                     if let uiImage = UIImage(data: sticker.data) {
                         Image(uiImage: uiImage)
@@ -67,6 +75,9 @@ struct StickerMatorView: View {
             .adaptiveMenuToolBar {
                 deleteSelectedStickerButton
                 UndoButton(undoManager: undoManager)
+                AnimatedActionButton(title: "Add Photo", systemImage: "photo.on.rectangle.angled") {
+                    showImageChooseOption = true
+                }
                 AnimatedActionButton(title: "Show StickerBar",systemImage: "theatermasks.fill",
                                      action: { showBottomBar.toggle() })
             }
@@ -77,10 +88,44 @@ struct StickerMatorView: View {
             .gesture(zoomGesture()
                         .simultaneously(with: singleTapToDeselectAllSticker()
                                             .simultaneously(with: panGesture())))
+            .confirmationDialog("Add a Photo", isPresented: $showImageChooseOption, titleVisibility: .visible) {
+                Button("From Photos") {
+                    imagePicker = .library
+                }
+                Button("From Camera") {
+                    imagePicker = .camera
+                }
+            }
+            .sheet(item: $imagePicker) { pickerType in
+                switch pickerType {
+                case .camera:
+                    Camera(imageHandleFunc: handlePickedPhoto)
+                case .library:
+                    ImagePicker(imageHandleFunc: handlePickedPhoto)
+                }
+            }
         }
     }
     
     @State private var selectedSticker = Set<StickerMatorModel.Sticker>()
+    
+    private func handlePickedPhoto(_ image: UIImage?) {
+        logger.info("handlePickedPhoto catched image")
+        if let image = image {
+            let userFileName = UUID().uuidString
+            if let data = image.pngData() {
+                let filename = getDocumentsDirectory().appendingPathComponent(userFileName)
+                logger.info("Image saved to \(filename)")
+                try? data.write(to: filename)
+            }
+            if let urlStr = getSavedImage(named: userFileName) {
+                document.setMainImage(url: URL(string: urlStr), undoManager: undoManager)
+            } else {
+                logger.warning("Get URL failed")
+            }
+        }
+        imagePicker = nil
+    }
     
     private func singleTapToDeselectAllSticker() -> some Gesture {
         TapGesture()
@@ -89,7 +134,6 @@ struct StickerMatorView: View {
                     selectedSticker.removeAll()
                 }
             }
-        
     }
     
     // MARK: drag & drop
