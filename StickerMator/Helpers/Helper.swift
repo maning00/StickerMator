@@ -169,3 +169,31 @@ func getSavedImage(named: String) -> String? {
     }
     return nil
 }
+
+struct AdaptiveMenu: ViewModifier {
+    
+    
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    
+    var compact: Bool { horizontalSizeClass == .compact }
+    
+    func body(content: Content) -> some View {
+        if compact {
+            Button { } label: {
+                Image(systemName: "ellipsis.circle")
+            }.contextMenu {
+                content
+            }
+        } else {
+            content
+        }
+    }
+}
+
+extension View {
+    func adaptiveMenuToolBar<Content>(@ViewBuilder content: () -> Content) -> some View where Content: View {
+        self.toolbar {
+            content().modifier(AdaptiveMenu())
+        }
+    }
+}

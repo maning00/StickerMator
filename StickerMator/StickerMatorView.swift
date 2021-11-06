@@ -37,7 +37,7 @@ struct StickerMatorView: View {
                     selectedSticker.removeAll()
                 }
             } label: {
-                Label("", systemImage: "trash")
+                Label("Delete", systemImage: "trash")
             }.foregroundColor(.red)
         }
     }
@@ -64,10 +64,10 @@ struct StickerMatorView: View {
                 }
                 .scaleEffect(zoomScale)
             }
-            .toolbar {
-                UndoButton(undoManager: undoManager)
+            .adaptiveMenuToolBar {
                 deleteSelectedStickerButton
-                AnimatedActionButton(systemImage: "theatermasks.fill",
+                UndoButton(undoManager: undoManager)
+                AnimatedActionButton(title: "Show StickerBar",systemImage: "theatermasks.fill",
                                      action: { showBottomBar.toggle() })
             }
             .clipped()
@@ -212,23 +212,22 @@ struct UndoButton: View {
     var undoManager: UndoManager?
     
     var body: some View {
-        let canUndo = undoManager?.canUndo ?? false
-        let canRedo = undoManager?.canRedo ?? false
-        if canUndo {
-            Button {
-                undoManager?.undo()
-            } label: {
-                Label("", systemImage: "arrow.uturn.backward.circle")
+        if let undoManager = undoManager {
+            Button {} label: {
+                Label("Undo/Redo", systemImage: "arrow.counterclockwise.circle")
+            }.contextMenu{
+                Button {
+                    undoManager.undo()
+                } label: {
+                    Label("Undo", systemImage: "arrow.uturn.backward.circle")
+                }
+                Button {
+                    undoManager.redo()
+                } label: {
+                    Label("Redo", systemImage: "arrow.uturn.right.circle")
+                }
             }
         }
-        if canRedo {
-            Button {
-                undoManager?.redo()
-            } label: {
-                Label("", systemImage: "arrow.uturn.right.circle")
-            }
-        }
-        
     }
 }
 
