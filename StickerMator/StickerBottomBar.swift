@@ -15,8 +15,8 @@ struct StickerBottomBar: View {
     
     var body: some View {
         HStack {
-            controlButton
             body(for: store.stickerSet(at: chosenIndex))
+            controlButton
         }
     }
     
@@ -69,8 +69,8 @@ struct StickerBottomBar: View {
     
     func body(for stickerSet: StickerSet) -> some View {
         HStack {
-            Text(stickerSet.name)
             ScrollingStickerView(images: store.stickerSet(at: chosenIndex).stickers)
+            Text(stickerSet.name)
         }
         .popover(item: $stickersetToEdit) { _ in
             StickerSetEditor(stickerSetToEdit: $store.stickerSets[chosenIndex])

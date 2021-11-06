@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import UniformTypeIdentifiers
 
 extension Collection where Element: Identifiable {
     func findIndex(of element: Element) -> Self.Index? {

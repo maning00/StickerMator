@@ -10,26 +10,13 @@ import MobileCoreServices
 
 struct StickerMatorView: View {
     @ObservedObject var document: StickerMatorViewModel
-    
+    @Environment(\.undoManager) var undoManager
     @State private var showBottomBar = false
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             ZStack(alignment: .topLeading) {
                 documentBody
-                deleteSelectedStickerButton
-            }.overlay {
-                if !showBottomBar {
-                    VStack {
-                        Spacer()
-                        HStack {
-                            AnimatedActionButton(systemImage: "photo.circle.fill",
-                                                 action: { showBottomBar.toggle() },
-                                                 labelFont: .system(size: 40))
-                                .padding()
-                            Spacer()
-                        }
-                    }
-                }
             }
             if showBottomBar {
                 StickerBottomBar(showBottomBar: $showBottomBar)
@@ -45,14 +32,13 @@ struct StickerMatorView: View {
             Button {
                 withAnimation {
                     for sticker in selectedSticker {
-                        document.removeSticker(sticker)
+                        document.removeSticker(sticker, undoManager: undoManager)
                     }
                     selectedSticker.removeAll()
                 }
             } label: {
-                Label("", systemImage: "trash").font(.system(size: 30))
+                Label("", systemImage: "trash")
             }.foregroundColor(.red)
-                .padding()
         }
     }
     
@@ -77,6 +63,12 @@ struct StickerMatorView: View {
                     }
                 }
                 .scaleEffect(zoomScale)
+            }
+            .toolbar {
+                UndoButton(undoManager: undoManager)
+                deleteSelectedStickerButton
+                AnimatedActionButton(systemImage: "theatermasks.fill",
+                                     action: { showBottomBar.toggle() })
             }
             .clipped()
             .onDrop(of: [.url, .image, .plainText], isTargeted: nil) { providers, location in
@@ -104,19 +96,19 @@ struct StickerMatorView: View {
     private func drop(providers: [NSItemProvider], at location: CGPoint, in geometry: GeometryProxy) -> Bool {
         var found = providers.loadObjects(ofType: URL.self) { url in
             document.addSticker(url: url, at: convertToEmojiCoordinates(location, in: geometry),
-                                size: defaultStickerSize / zoomScale)
+                                size: defaultStickerSize / zoomScale, undoManager: undoManager)
         }
         if !found {
             found = providers.loadObjects(ofType: UIImage.self) { image in
                 document.addSticker(image: image, at: convertToEmojiCoordinates(location, in: geometry),
-                                    size: defaultStickerSize / zoomScale)
+                                    size: defaultStickerSize / zoomScale, undoManager: undoManager)
                 
             }
         }
         if !found {
             found = providers.loadObjects(ofType: String.self) { path in
                 document.addSticker(path: path, at: convertToEmojiCoordinates(location, in: geometry),
-                                    size: defaultStickerSize / zoomScale)
+                                    size: defaultStickerSize / zoomScale, undoManager: undoManager)
             }
         }
         return found
@@ -176,7 +168,7 @@ struct StickerMatorView: View {
                     steadyZoomScale *= gestureScaleAtEnd
                 } else {
                     for sticker in selectedSticker {
-                        document.scaleSticker(sticker, by: gestureScaleAtEnd)
+                        document.scaleSticker(sticker, by: gestureScaleAtEnd, undoManager: undoManager)
                     }
                 }
             }
@@ -200,7 +192,7 @@ struct StickerMatorView: View {
                 }
                 .onEnded { finalValue in
                     for sticker in selectedSticker {
-                        document.moveSticker(sticker, by: finalValue.translation / zoomScale)
+                        document.moveSticker(sticker, by: finalValue.translation / zoomScale, undoManager: undoManager)
                     }
                 }
         } else {
@@ -212,6 +204,31 @@ struct StickerMatorView: View {
                     steadyPanOffset = steadyPanOffset + (finalValue.translation / zoomScale)
                 }
         }
+    }
+}
+
+struct UndoButton: View {
+    
+    var undoManager: UndoManager?
+    
+    var body: some View {
+        let canUndo = undoManager?.canUndo ?? false
+        let canRedo = undoManager?.canRedo ?? false
+        if canUndo {
+            Button {
+                undoManager?.undo()
+            } label: {
+                Label("", systemImage: "arrow.uturn.backward.circle")
+            }
+        }
+        if canRedo {
+            Button {
+                undoManager?.redo()
+            } label: {
+                Label("", systemImage: "arrow.uturn.right.circle")
+            }
+        }
+        
     }
 }
 

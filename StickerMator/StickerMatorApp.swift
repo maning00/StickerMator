@@ -9,11 +9,10 @@ import SwiftUI
 
 @main
 struct StickerMatorApp: App {
-    let document = StickerMatorViewModel()
     @StateObject var stickerSet = StickerStorage(name: "Default")
     var body: some Scene {
-        WindowGroup {
-            StickerMatorView(document: document).environmentObject(stickerSet)
+        DocumentGroup(newDocument: { StickerMatorViewModel() }) { editor in
+            StickerMatorView(document: editor.document).environmentObject(stickerSet)
         }
     }
 }

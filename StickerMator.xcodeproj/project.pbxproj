@@ -42,6 +42,7 @@
 		FB7CF026273552FF00D3FAB0 /* MLMultiArray+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MLMultiArray+Image.swift"; sourceTree = "<group>"; };
 		FB7CF029273555A200D3FAB0 /* BackgroundRemoval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundRemoval.swift; sourceTree = "<group>"; };
 		FB7CF02B273556DE00D3FAB0 /* DeepLabV3.mlkitmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = DeepLabV3.mlkitmodel; sourceTree = "<group>"; };
+		FB7CF02E2736233F00D3FAB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FBAB6B6A27316F9700FA4539 /* StickerSetEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerSetEditor.swift; sourceTree = "<group>"; };
 		FBAB6B6C2731839E00FA4539 /* StickerSetManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerSetManager.swift; sourceTree = "<group>"; };
 		FBAB6B6E2732619200FA4539 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
@@ -83,6 +84,7 @@
 		FB6A061A272F7CF4000DBA59 /* StickerMator */ = {
 			isa = PBXGroup;
 			children = (
+				FB7CF02E2736233F00D3FAB0 /* Info.plist */,
 				FB7CF023273552B800D3FAB0 /* Helpers */,
 				FB6A061B272F7CF4000DBA59 /* StickerMatorApp.swift */,
 				FB6A0629272F868D000DBA59 /* StickerMatorModel.swift */,
@@ -207,6 +209,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FBAB6B712732627800FA4539 /* Camera.swift in Sources */,
+				FBAB6B6F2732619200FA4539 /* ImagePicker.swift in Sources */,
 				FBC250E327311A2B005DAD6C /* StickerStorage.swift in Sources */,
 				FB7CF025273552EA00D3FAB0 /* CGImage+RawBytes.swift in Sources */,
 				FBAB6B6B27316F9700FA4539 /* StickerSetEditor.swift in Sources */,
@@ -220,9 +223,8 @@
 				FBAB6B9B2733ADEE00FA4539 /* ImageEditor.swift in Sources */,
 				FBAB6B6D2731839E00FA4539 /* StickerSetManager.swift in Sources */,
 				FB6A062E272FB0C9000DBA59 /* Helper.swift in Sources */,
-				FBAB6B6F2732619200FA4539 /* ImagePicker.swift in Sources */,
-				FB6A062C272F8F1A000DBA59 /* StickerMatorViewModel.swift in Sources */,
 				FB6A061C272F7CF4000DBA59 /* StickerMatorApp.swift in Sources */,
+				FB6A062C272F8F1A000DBA59 /* StickerMatorViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,12 +358,14 @@
 				DEVELOPMENT_TEAM = ZRZ8BS7EUF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = StickerMator/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "The camera will be used to import photo";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -386,12 +390,14 @@
 				DEVELOPMENT_TEAM = ZRZ8BS7EUF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = StickerMator/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "The camera will be used to import photo";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
