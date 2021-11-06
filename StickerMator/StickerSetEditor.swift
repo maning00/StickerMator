@@ -29,13 +29,7 @@ struct StickerSetEditor: View {
     private func handlePickedSticker(_ image: UIImage?) {
         logger.info("Function handlePickedSticker catched image")
         if let image = image {
-            let userFileName = UUID().uuidString
-            if let data = image.pngData() {
-                let filename = getDocumentsDirectory().appendingPathComponent(userFileName)
-                logger.info("Image saved to \(filename)")
-                try? data.write(to: filename)
-            }
-            if let urlStr = getSavedImage(named: userFileName) {
+            if let urlStr = saveFileAndReturnURLString(image: image) {
                 stickerSetToEdit.stickers.append(urlStr)
             } else {
                 logger.warning("Get URL failed")

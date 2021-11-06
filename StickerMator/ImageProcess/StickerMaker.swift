@@ -132,13 +132,7 @@ struct StickerMaker: View {
     private func saveImageToStickerSet(_ image: UIImage?, stickerSetToAdd: StickerSet) {
         logger.info("saveImageToStickerSet catched image")
         if let image = image {
-            let userFileName = UUID().uuidString
-            if let data = image.pngData() {
-                let filename = getDocumentsDirectory().appendingPathComponent(userFileName)
-                logger.info("Image saved to \(filename)")
-                try? data.write(to: filename)
-            }
-            if let urlStr = getSavedImage(named: userFileName) {
+            if let urlStr = saveFileAndReturnURLString(image: image) {
                 if let index = store.stickerSets.findIndex(of: stickerSetToAdd) {
                     store.stickerSets[index].stickers.append(urlStr)
                 }
