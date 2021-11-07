@@ -11,8 +11,7 @@ import MobileCoreServices
 struct StickerMatorView: View {
     @ObservedObject var document: StickerMatorViewModel
     @Environment(\.undoManager) var undoManager
-    @State private var showBottomBar = false
-    @State private var showImageChooseOption = false
+    @State private var showBottomBar = true
     @State private var imagePicker: ImagePickerType? = nil
     
     var body: some View {
@@ -75,11 +74,15 @@ struct StickerMatorView: View {
             .adaptiveMenuToolBar {
                 deleteSelectedStickerButton
                 UndoButton(undoManager: undoManager)
-                AnimatedActionButton(title: "Add Photo", systemImage: "photo.on.rectangle.angled") {
-                    showImageChooseOption = true
+                pickPhotoMenu
+                if showBottomBar == true {
+                    AnimatedActionButton(title: "Hide StickerBar",systemImage: "theatermasks.fill",
+                                                         action: { showBottomBar.toggle() })
+                } else {
+                    AnimatedActionButton(title: "Show StickerBar",systemImage: "theatermasks.fill",
+                                                         action: { showBottomBar.toggle() })
                 }
-                AnimatedActionButton(title: "Show StickerBar",systemImage: "theatermasks.fill",
-                                     action: { showBottomBar.toggle() })
+                
             }
             .clipped()
             .onDrop(of: [.url, .image, .plainText], isTargeted: nil) { providers, location in
@@ -88,14 +91,6 @@ struct StickerMatorView: View {
             .gesture(zoomGesture()
                         .simultaneously(with: singleTapToDeselectAllSticker()
                                             .simultaneously(with: panGesture())))
-            .confirmationDialog("Add a Photo", isPresented: $showImageChooseOption, titleVisibility: .visible) {
-                Button("From Photos") {
-                    imagePicker = .library
-                }
-                Button("From Camera") {
-                    imagePicker = .camera
-                }
-            }
             .sheet(item: $imagePicker) { pickerType in
                 switch pickerType {
                 case .camera:
@@ -109,20 +104,26 @@ struct StickerMatorView: View {
     
     @State private var selectedSticker = Set<StickerMatorModel.Sticker>()
     
+    @ViewBuilder
+    private var pickPhotoMenu: some View {
+        Menu {
+            Button("From Photos") {
+                imagePicker = .library
+            }
+            Button("From Camera") {
+                imagePicker = .camera
+            }
+        } label: {
+            Image(systemName: "photo.on.rectangle.angled")
+        }
+    }
+    
     private func handlePickedPhoto(_ image: UIImage?) {
         logger.info("handlePickedPhoto catched image")
         if let image = image {
-            let userFileName = UUID().uuidString
-            if let data = image.pngData() {
-                let filename = getDocumentsDirectory().appendingPathComponent(userFileName)
-                logger.info("Image saved to \(filename)")
-                try? data.write(to: filename)
-            }
-            if let urlStr = getSavedImage(named: userFileName) {
-                document.setMainImage(url: URL(string: urlStr), undoManager: undoManager)
-            } else {
-                logger.warning("Get URL failed")
-            }
+            document.setMainImage(image: image, undoManager: undoManager)
+        } else {
+            logger.warning("Get URL failed")
         }
         imagePicker = nil
     }
@@ -257,9 +258,7 @@ struct UndoButton: View {
     
     var body: some View {
         if let undoManager = undoManager {
-            Button {} label: {
-                Label("Undo/Redo", systemImage: "arrow.counterclockwise.circle")
-            }.contextMenu{
+            Menu {
                 Button {
                     undoManager.undo()
                 } label: {
@@ -270,6 +269,8 @@ struct UndoButton: View {
                 } label: {
                     Label("Redo", systemImage: "arrow.uturn.right.circle")
                 }
+            } label: {
+                Label("Undo/Redo", systemImage: "arrow.counterclockwise.circle")
             }
         }
     }

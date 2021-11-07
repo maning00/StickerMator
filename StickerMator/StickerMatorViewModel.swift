@@ -23,6 +23,9 @@ class StickerMatorViewModel: ReferenceFileDocument {
     required init(configuration: ReadConfiguration) throws {
         if let json = configuration.file.regularFileContents {
             stickerMator = try StickerMatorModel(json: json)
+            if let mainImage = stickerMator.mainImage {
+                setMainImage(image: UIImage(data: mainImage), undoManager: nil)
+            }
         } else {
             throw CocoaError(.fileReadCorruptFile)
         }
@@ -46,11 +49,10 @@ class StickerMatorViewModel: ReferenceFileDocument {
     var stickers: [StickerMatorModel.Sticker] { stickerMator.stickers }
     
     // MARK: - Main Image
-    func setMainImage(url: URL?, undoManager: UndoManager?) {
+    func setMainImage(image: UIImage?, undoManager: UndoManager?) {
         undoPerform(with: undoManager) {
-            stickerMator.mainImage = url
-            guard let urlString = url?.absoluteString else { return }
-            mainImage = UIImage(named: urlString)
+            stickerMator.mainImage = image?.pngData()
+            mainImage = image
         }
     }
     

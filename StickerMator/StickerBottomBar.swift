@@ -27,9 +27,6 @@ struct StickerBottomBar: View {
     
     @ViewBuilder
     var contextMenu: some View {
-        AnimatedActionButton(title: "Edit", systemImage: "pencil.circle") {
-            stickersetToEdit = store.stickerSet(at: chosenIndex)
-        }
         AnimatedActionButton(title: "New", systemImage: "plus.circle") {
             store.addStickerSet(name: "New", at: chosenIndex)
             stickersetToEdit = store.stickerSet(at: chosenIndex)
@@ -40,9 +37,6 @@ struct StickerBottomBar: View {
         gotoMenu
         AnimatedActionButton(title: "Sticker Maker", systemImage: "wand.and.rays") {
                     showEditor = true
-                }
-        AnimatedActionButton(title: "Hide Bar", systemImage: "eye.slash") {
-            showBottomBar = false
         }
     }
     
@@ -71,9 +65,6 @@ struct StickerBottomBar: View {
         HStack {
             ScrollingStickerView(images: store.stickerSet(at: chosenIndex).stickers)
             Text(stickerSet.name)
-        }
-        .popover(item: $stickersetToEdit) { _ in
-            StickerSetEditor(stickerSetToEdit: $store.stickerSets[chosenIndex])
         }
         .sheet(isPresented: $managing) {
             StickerSetManager()
