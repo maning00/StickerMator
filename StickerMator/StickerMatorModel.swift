@@ -17,14 +17,14 @@ struct StickerMatorModel: Codable {
     
     // Sticker is an image
     struct Sticker: Identifiable, Hashable, Codable {
-        var data: URL
+        var data: Data
         var x: Int
         var y: Int
         var width: Int
         var height: Int
         let id: Int
         
-        fileprivate init( data: URL, x: Int, y: Int, width: Int, height: Int, id: Int) {
+        fileprivate init( data: Data, x: Int, y: Int, width: Int, height: Int, id: Int) {
             self.data = data
             self.x = x
             self.y = y
@@ -52,9 +52,9 @@ struct StickerMatorModel: Codable {
     }
     
     
-    mutating func addSticker (imageURL: URL, at location:(x: Int, y: Int), size: (width: Int, height: Int)) {
+    mutating func addSticker (imageData: Data, at location:(x: Int, y: Int), size: (width: Int, height: Int)) {
         uniqueStickerId += 1
-        stickers.append(Sticker(data: imageURL, x: location.x, y: location.y,
+        stickers.append(Sticker(data: imageData, x: location.x, y: location.y,
                                 width: size.width, height: size.height, id: uniqueStickerId))
     }
     

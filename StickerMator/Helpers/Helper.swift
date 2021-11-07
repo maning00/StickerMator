@@ -204,17 +204,3 @@ enum ImagePickerType: Identifiable {
     case library
     var id: ImagePickerType {self}
 }
-
-
-func saveFileAndReturnURLString(image: UIImage) -> String? {
-    let userFileName = UUID().uuidString
-    if let data = image.pngData() {
-        let filename = getDocumentsDirectory().appendingPathComponent(userFileName)
-        logger.info("Image saved to \(filename)")
-        try? data.write(to: filename)
-    }
-    if let urlStr = getSavedImage(named: userFileName) {
-        return urlStr
-    }
-    return nil
-}

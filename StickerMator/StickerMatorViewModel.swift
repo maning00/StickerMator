@@ -23,7 +23,6 @@ class StickerMatorViewModel: ReferenceFileDocument {
     required init(configuration: ReadConfiguration) throws {
         if let json = configuration.file.regularFileContents {
             stickerMator = try StickerMatorModel(json: json)
-            setMainImage(url: stickerMator.mainImage, undoManager: nil)
         } else {
             throw CocoaError(.fileReadCorruptFile)
         }
@@ -58,13 +57,10 @@ class StickerMatorViewModel: ReferenceFileDocument {
     
     // MARK: - Sticker operation
     func addSticker (image: UIImage, at location:(x: Int, y: Int), size: CGSize, undoManager: UndoManager?) {
-        if let urlStr = saveFileAndReturnURLString(image: image),
-           let url = URL(string: urlStr) {
+        if let data = image.pngData() {
             undoPerform(with: undoManager) {
-                stickerMator.addSticker(imageURL: url, at: (x: location.x, y: location.y), size: (Int(size.width), Int(size.height)))
+                self.stickerMator.addSticker(imageData: data, at: location, size: (Int(size.width), Int(size.height)))
             }
-        } else {
-            logger.warning("Get URL failed")
         }
     }
     
@@ -76,24 +72,15 @@ class StickerMatorViewModel: ReferenceFileDocument {
             .replaceError(with: nil)
             .receive(on: DispatchQueue.main)
         _ = publisher.sink { [weak self] image in
-            if let image = image {
-                if let urlStr = saveFileAndReturnURLString(image: image),
-                   let url = URL(string: urlStr) {
-                    self?.undoPerform(with: undoManager) {
-                        self?.stickerMator.addSticker(imageURL: url, at: (x: location.x, y: location.y), size: (Int(size.width), Int(size.height)))
-                    }
-                } else {
-                    logger.warning("Get URL failed")
-                }
+            if let uiImage = image {
+                self?.addSticker (image: uiImage, at: (x: location.x, y: location.y), size: size, undoManager: undoManager)
             }
         }
     }
     
     func addSticker (path: String, at location:(x: Int, y: Int), size: CGSize, undoManager: UndoManager?) {
-        if let url = URL(string: path) {
-            undoPerform(with: undoManager) {
-                stickerMator.addSticker(imageURL: url, at: (x: location.x, y: location.y), size: (Int(size.width), Int(size.height)))
-            }
+        if let uiImage = UIImage(named: path) {
+            self.addSticker(image: uiImage, at: (x: location.x, y: location.y), size: size, undoManager: undoManager)
         }
     }
     
