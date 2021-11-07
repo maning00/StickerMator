@@ -10,13 +10,15 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 extension Collection where Element: Identifiable {
+    /// This function returns index of specified element
     func findIndex(of element: Element) -> Self.Index? {
         firstIndex(where: {$0.id == element.id })
     }
 }
 
 
-// from CS193p
+/// From CS193p
+///  load object from NSItemProvider
 extension Array where Element == NSItemProvider {
     func loadObjects<T>(ofType theType: T.Type, firstOnly: Bool = false,
                         using load: @escaping (T) -> Void) -> Bool where T: NSItemProviderReading {
@@ -56,7 +58,7 @@ extension Array where Element == NSItemProvider {
     }
 }
 
-
+// Add operator to CGSize
 extension CGSize {
     static func - (left: Self, right: Self) -> CGSize {
         CGSize(width: left.width - right.width, height: left.height - right.height)
@@ -75,9 +77,11 @@ extension CGSize {
     }
 }
 
+/// **containsMatching**: Check if the element is in the set
 extension Set where Element: Identifiable {
+    
+    /// If there is this **element** in the Set, delete it, otherwise insert this element
     mutating func toggleMatching(_ element: Element) {
-        // has element -> remove, else -> insert
         if let matchingIndex = firstIndex(where: {$0.id == element.id}) {
             remove(at: matchingIndex)
         } else {
@@ -85,6 +89,7 @@ extension Set where Element: Identifiable {
         }
     }
     
+    /// Check if the **element** is in the set
     func containsMatching(_ element: Element) -> Bool {
         contains(where: {$0.id == element.id})
     }
@@ -116,12 +121,15 @@ struct AnimatedActionButton: View {
 
 
 extension RangeReplaceableCollection where Element: Identifiable {
+    
+    /// Find the element and remove it
     mutating func remove(_ element: Element) {
         if let index = findIndex(of: element) {
             remove(at: index)
         }
     }
-
+    
+    /// Return the element the same as giving element value
     subscript(_ element: Element) -> Element {
         get {
             if let index = findIndex(of: element) {
@@ -138,13 +146,12 @@ extension RangeReplaceableCollection where Element: Identifiable {
     }
 }
 
-
 func getDocumentsDirectory() -> URL {
     let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
     return paths[0]
 }
 
-
+/// A view with a button on the top and label on the bottom
 struct IconAboveTextButton: View {
     
     var title: String
@@ -162,7 +169,6 @@ struct IconAboveTextButton: View {
     }
 }
 
-// get path URL string
 func getSavedImage(named: String) -> String? {
     if let dir = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) {
         return URL(fileURLWithPath: dir.absoluteString).appendingPathComponent(named).path
@@ -170,6 +176,8 @@ func getSavedImage(named: String) -> String? {
     return nil
 }
 
+/// Handling horizontal and vertical screens,
+/// combine content into a menu in portrait mode
 struct AdaptiveMenu: ViewModifier {
     
     
@@ -216,4 +224,29 @@ func saveFileAndReturnURLString(image: UIImage) -> String? {
         return urlStr
     }
     return nil
+}
+
+
+struct UndoButton: View {
+    
+    var undoManager: UndoManager?
+    
+    var body: some View {
+        if let undoManager = undoManager {
+            Menu {
+                Button {
+                    undoManager.undo()
+                } label: {
+                    Label("Undo", systemImage: "arrow.uturn.backward.circle")
+                }
+                Button {
+                    undoManager.redo()
+                } label: {
+                    Label("Redo", systemImage: "arrow.uturn.right.circle")
+                }
+            } label: {
+                Label("Undo/Redo", systemImage: "arrow.counterclockwise.circle")
+            }
+        }
+    }
 }

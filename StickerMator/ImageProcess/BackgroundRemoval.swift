@@ -35,6 +35,7 @@ class BackgroundRemoval {
         return imageSegModel
     }
     
+    /// Create request and perform request
     func performSegmentation() {
         let request = VNCoreMLRequest(model: BackgroundRemoval.imageSegementationModel,
                                       completionHandler: segementationRequestHandler)
@@ -62,6 +63,7 @@ class BackgroundRemoval {
         }
     }
     
+    /// Remove background using CIFilter.blendWithMask
     /// CIFilter.blendWithMask uses values from a grayscale mask to interpolate between an image and the background.
     /// When a mask green value is 0.0, the result is the background.
     /// When the mask green value is 1.0, the result is the image.

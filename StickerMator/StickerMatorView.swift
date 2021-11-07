@@ -49,7 +49,7 @@ struct StickerMatorView: View {
                 if let mainImage = document.mainImage {
                     Image(uiImage: mainImage)
                         .scaleEffect(zoomScale)
-                        .position(convertFromEmojiCoordinates((0,0), in: geometry))
+                        .position(positionForMainImage(geometry: geometry))
                 } else {
                     Color.white
                 }
@@ -59,17 +59,17 @@ struct StickerMatorView: View {
                             .resizable()
                             .border(Color.blue, width: selectedSticker.containsMatching(sticker) ? 4 : 0)
                             .frame(width: frameSize(for: sticker).width, height: frameSize(for: sticker).height)
+                            .scaleEffect(selectedSticker.containsMatching(sticker) ? zoomScale * stickerGestureZoomScale : zoomScale)
                             .offset(selectedSticker.containsMatching(sticker) ? stickerGesturePanOffset : .zero)
-                            .position(position(for: sticker, in: geometry))
+                            .position(position(for: sticker))
                             .onTapGesture {
                                 withAnimation {
                                     selectedSticker.toggleMatching(sticker)
                                 }
-                            }.scaleEffect(selectedSticker.containsMatching(sticker) ? zoomScale * stickerGestureZoomScale : zoomScale)
+                            }
                             .gesture(panGesture(for: sticker))
                     }
                 }
-                .scaleEffect(zoomScale)
             }
             .adaptiveMenuToolBar {
                 deleteSelectedStickerButton
@@ -77,10 +77,10 @@ struct StickerMatorView: View {
                 pickPhotoMenu
                 if showBottomBar == true {
                     AnimatedActionButton(title: "Hide StickerBar",systemImage: "theatermasks.fill",
-                                                         action: { showBottomBar.toggle() })
+                                         action: { showBottomBar.toggle() })
                 } else {
                     AnimatedActionButton(title: "Show StickerBar",systemImage: "theatermasks.fill",
-                                                         action: { showBottomBar.toggle() })
+                                         action: { showBottomBar.toggle() })
                 }
                 
             }
@@ -89,8 +89,7 @@ struct StickerMatorView: View {
                 drop(providers: providers, at: location, in: geometry)
             }
             .gesture(zoomGesture()
-                        .simultaneously(with: singleTapToDeselectAllSticker()
-                                            .simultaneously(with: panGesture())))
+                        .simultaneously(with: singleTapToDeselectAllSticker().simultaneously(with: panGesture())))
             .sheet(item: $imagePicker) { pickerType in
                 switch pickerType {
                 case .camera:
@@ -102,6 +101,7 @@ struct StickerMatorView: View {
         }
     }
     
+    /// A  Set to store selected Sticker, the selected sticker will have a border
     @State private var selectedSticker = Set<StickerMatorModel.Sticker>()
     
     @ViewBuilder
@@ -114,10 +114,11 @@ struct StickerMatorView: View {
                 imagePicker = .camera
             }
         } label: {
-            Image(systemName: "photo.on.rectangle.angled")
+            Label("Add Photo", systemImage: "photo.on.rectangle.angled")
         }
     }
     
+    /// Handle picked image and set as mainImage
     private func handlePickedPhoto(_ image: UIImage?) {
         logger.info("handlePickedPhoto catched image")
         if let image = image {
@@ -137,22 +138,29 @@ struct StickerMatorView: View {
             }
     }
     
-    // MARK: drag & drop
+    // MARK: - drag & drop
+    
+    /// Drop Handler
+    ///
+    /// There're 3 types of object to handle: URL, UIImage and String:
+    /// - **URL** is online content, should be downloaded and handle
+    /// - **UIImage** is image that can display directly
+    /// - **String** is path of the image, the image is already downloaded on the device
     private func drop(providers: [NSItemProvider], at location: CGPoint, in geometry: GeometryProxy) -> Bool {
         var found = providers.loadObjects(ofType: URL.self) { url in
-            document.addSticker(url: url, at: convertToEmojiCoordinates(location, in: geometry),
+            document.addSticker(url: url, at: location,
                                 size: defaultStickerSize / zoomScale, undoManager: undoManager)
         }
         if !found {
             found = providers.loadObjects(ofType: UIImage.self) { image in
-                document.addSticker(image: image, at: convertToEmojiCoordinates(location, in: geometry),
+                document.addSticker(image: image, at: location,
                                     size: defaultStickerSize / zoomScale, undoManager: undoManager)
                 
             }
         }
         if !found {
             found = providers.loadObjects(ofType: String.self) { path in
-                document.addSticker(path: path, at: convertToEmojiCoordinates(location, in: geometry),
+                document.addSticker(path: path, at: location,
                                     size: defaultStickerSize / zoomScale, undoManager: undoManager)
             }
         }
@@ -160,31 +168,33 @@ struct StickerMatorView: View {
     }
     
     
-    // MARK: Position the view
-    private func position(for sticker: StickerMatorModel.Sticker, in geometry: GeometryProxy) -> CGPoint {
-        convertFromEmojiCoordinates((sticker.x, sticker.y), in: geometry)
+    // MARK: - Position the view
+    
+    /// Get initial main image position,
+    /// main image position is in the center of the view
+    /// - Returns: CGPoint of main image's center
+    private func positionForMainImage(geometry: GeometryProxy) -> CGPoint {
+        return CGPoint (
+            x: geometry.frame(in: .local).midX + panOffset.width,
+            y: geometry.frame(in: .local).midY + panOffset.height
+        )
+    }
+    
+    /// Get sticker's position in view
+    /// Sticker's position is sticker's coordinate plus global panoffset
+    /// - Returns: CGPoint of sticker's center
+    private func position(for sticker: StickerMatorModel.Sticker) -> CGPoint {
+        return CGPoint(
+            x: CGFloat(sticker.x) + panOffset.width,
+            y: CGFloat(sticker.y) + panOffset.height
+        )
     }
     
     private func frameSize(for sticker: StickerMatorModel.Sticker) -> CGSize {
         CGSize(width: sticker.width, height: sticker.height)
     }
     
-    private func convertToEmojiCoordinates(_ location: CGPoint, in geometry: GeometryProxy) -> (x: Int, y: Int) {
-        let location = CGPoint(
-            x: (location.x - panOffset.width) / zoomScale,
-            y: (location.y - panOffset.height) / zoomScale
-        )
-        return (Int(location.x), Int(location.y))
-    }
-    
-    private func convertFromEmojiCoordinates(_ location: (x: Int, y: Int), in geometry: GeometryProxy) -> CGPoint {
-        return CGPoint(
-            x: CGFloat(location.x) * zoomScale + panOffset.width,
-            y: CGFloat(location.y) * zoomScale + panOffset.height
-        )
-    }
-    
-    // MARK: Scale
+    // MARK: - Scale Gesture
     
     @State private var steadyZoomScale: CGFloat = 1
     @GestureState private var gestureZoomScale: CGFloat = 1
@@ -220,12 +230,14 @@ struct StickerMatorView: View {
         
     }
     
+    // MARK: - Pan Gesture
+    
     @State private var steadyPanOffset: CGSize = CGSize.zero
     @GestureState private var gesturePanOffset: CGSize = CGSize.zero
     @GestureState private var stickerGesturePanOffset: CGSize = CGSize.zero  // single sticker panoff
     
     private var panOffset: CGSize {
-        (steadyPanOffset + gesturePanOffset) * zoomScale
+        (steadyPanOffset + gesturePanOffset)
     }
     
     private func panGesture(for sticker: StickerMatorModel.Sticker? = nil) -> some Gesture {
@@ -237,7 +249,7 @@ struct StickerMatorView: View {
                 }
                 .onEnded { finalValue in
                     for sticker in selectedSticker {
-                        document.moveSticker(sticker, by: finalValue.translation / zoomScale, undoManager: undoManager)
+                        document.moveSticker(sticker, by: finalValue.translation, undoManager: undoManager)
                     }
                 }
         } else {
@@ -246,32 +258,8 @@ struct StickerMatorView: View {
                     gesturePanOffset = latestvalue.translation
                 }
                 .onEnded { finalValue in
-                    steadyPanOffset = steadyPanOffset + (finalValue.translation / zoomScale)
+                    steadyPanOffset = steadyPanOffset + (finalValue.translation)
                 }
-        }
-    }
-}
-
-struct UndoButton: View {
-    
-    var undoManager: UndoManager?
-    
-    var body: some View {
-        if let undoManager = undoManager {
-            Menu {
-                Button {
-                    undoManager.undo()
-                } label: {
-                    Label("Undo", systemImage: "arrow.uturn.backward.circle")
-                }
-                Button {
-                    undoManager.redo()
-                } label: {
-                    Label("Redo", systemImage: "arrow.uturn.right.circle")
-                }
-            } label: {
-                Label("Undo/Redo", systemImage: "arrow.counterclockwise.circle")
-            }
         }
     }
 }

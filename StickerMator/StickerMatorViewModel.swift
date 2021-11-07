@@ -18,7 +18,7 @@ class StickerMatorViewModel: ReferenceFileDocument {
     
     
     // MARK: - ReferenceFileDocument
-
+    
     
     required init(configuration: ReadConfiguration) throws {
         if let json = configuration.file.regularFileContents {
@@ -40,6 +40,8 @@ class StickerMatorViewModel: ReferenceFileDocument {
     }
     
     @Published private(set) var stickerMator: StickerMatorModel
+    
+    /// MainImage is background
     @Published var mainImage: UIImage?
     
     init () {
@@ -58,16 +60,16 @@ class StickerMatorViewModel: ReferenceFileDocument {
     
     
     // MARK: - Sticker operation
-    func addSticker (image: UIImage, at location:(x: Int, y: Int), size: CGSize, undoManager: UndoManager?) {
+    func addSticker (image: UIImage, at location: CGPoint, size: CGSize, undoManager: UndoManager?) {
         if let data = image.pngData() {
             undoPerform(with: undoManager) {
-                self.stickerMator.addSticker(imageData: data, at: location, size: (Int(size.width), Int(size.height)))
+                self.stickerMator.addSticker(imageData: data, at: (Float(location.x), Float(location.y)), size: (Int(size.width), Int(size.height)))
             }
         }
     }
     
     
-    func addSticker (url: URL, at location:(x: Int, y: Int), size: CGSize, undoManager: UndoManager?) {
+    func addSticker (url: URL, at location: CGPoint, size: CGSize, undoManager: UndoManager?) {
         let session = URLSession.shared
         let publisher = session.dataTaskPublisher(for: url)
             .map {(data, _) in UIImage(data: data)}
@@ -75,22 +77,22 @@ class StickerMatorViewModel: ReferenceFileDocument {
             .receive(on: DispatchQueue.main)
         _ = publisher.sink { [weak self] image in
             if let uiImage = image {
-                self?.addSticker (image: uiImage, at: (x: location.x, y: location.y), size: size, undoManager: undoManager)
+                self?.addSticker (image: uiImage, at: location, size: size, undoManager: undoManager)
             }
         }
     }
     
-    func addSticker (path: String, at location:(x: Int, y: Int), size: CGSize, undoManager: UndoManager?) {
+    func addSticker (path: String, at location: CGPoint, size: CGSize, undoManager: UndoManager?) {
         if let uiImage = UIImage(named: path) {
-            self.addSticker(image: uiImage, at: (x: location.x, y: location.y), size: size, undoManager: undoManager)
+            self.addSticker(image: uiImage, at: location, size: size, undoManager: undoManager)
         }
     }
     
     func moveSticker(_ sticker: StickerMatorModel.Sticker, by offset: CGSize, undoManager: UndoManager?) {
         if let index = stickerMator.stickers.findIndex(of: sticker) {
             undoPerform(with: undoManager) {
-                stickerMator.stickers[index].x += Int(offset.width)
-                stickerMator.stickers[index].y += Int(offset.height)
+                stickerMator.stickers[index].x += Float(offset.width)
+                stickerMator.stickers[index].y += Float(offset.height)
             }
         }
     }
@@ -108,17 +110,6 @@ class StickerMatorViewModel: ReferenceFileDocument {
     func removeSticker(_ sticker: StickerMatorModel.Sticker, undoManager: UndoManager?) {
         undoPerform(with: undoManager) {
             stickerMator.removeSticker(sticker)
-        }
-    }
-    
-    
-    private func saveData(to url: URL) {
-        do {
-            let data: Data = try stickerMator.jsonEncode()
-            try data.write(to: url)
-            logger.info("saveData success")
-        } catch {
-            logger.error("Data write failed: \(error.localizedDescription)")
         }
     }
     

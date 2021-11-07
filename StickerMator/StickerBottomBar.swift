@@ -36,7 +36,7 @@ struct StickerBottomBar: View {
         }
         gotoMenu
         AnimatedActionButton(title: "Sticker Maker", systemImage: "wand.and.rays") {
-                    showEditor = true
+            showEditor = true
         }
     }
     
