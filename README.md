@@ -1,24 +1,24 @@
 # StickerMator
 StickerMator is a SwiftUI based iOS app to add stickers to photos, it can use different sticker packs and users can make their own sticker packs.
 <div align="center">
-<img src="https://dsc.cloud/8532ed/mockuuups-minimal-iphone-mockup-on-a-white-table-with-a-wireless-keyboard-by-the-side.jpeg" height="500px" alt="file manager" >
-<img src="https://dsc.cloud/8532ed/mockuuups-iphone-mockup-close-up-on-a-wooden-table.jpeg" height="500px" alt="main screen" >
+<img src="https://dsc.cloud/8532ed/skm-1.jpeg" height="500px" alt="skm-1" >
+<img src="https://dsc.cloud/8532ed/skm-2.jpeg" height="500px" alt="skm-2" >
 </div>
 
 ## Features
 - **Sticker Maker**: A simple sticker editing tool that allows users to select images from photo albums for processing. CoreML-based image segmentation enables automatic background removal for sticker creation. In addition, a variety of filters are provided for users to freely choose to adjust.
 <div align="center">
-<img src="https://dsc.cloud/8532ed/IMG_0137.PNG" height="240px" alt="file manager" >
-<img src="https://dsc.cloud/8532ed/IMG_0138.PNG" height="240px" alt="main screen" >
+<img src="https://dsc.cloud/8532ed/skm-3.PNG" height="240px" alt="skm-3" >
+<img src="https://dsc.cloud/8532ed/skm-4.PNG" height="240px" alt="skm-4" >
 </div>
 <div align="center">
-<img src="https://dsc.cloud/8532ed/IMG_0139.PNG" height="400px" alt="file manager" >
+<img src="https://dsc.cloud/8532ed/skm-5.PNG" height="400px" alt="skm-5" >
 </div>
 
 - **Sticker Packs**: Users can customize their own sticker packs, manage them at will, add and delete.
 <div align="center">
-<img src="https://dsc.cloud/8532ed/IMG_0140.PNG" height="240px" alt="file manager" >
-<img src="https://dsc.cloud/8532ed/IMG_0141.PNG" height="240px" alt="main screen" >
+<img src="https://dsc.cloud/8532ed/skm-6.PNG" height="240px" alt="skm-6" >
+<img src="https://dsc.cloud/8532ed/skm-7.PNG" height="240px" alt="skm-7" >
 </div>
 
 - **Multi-Touch support**: Stickers and images in StickerMator can be resized with smooth multi-touch gestures.
