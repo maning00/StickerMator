@@ -60,16 +60,30 @@ class StickerMatorViewModel: ReferenceFileDocument {
     
     
     // MARK: - Sticker operation
-    func addSticker (image: UIImage, at location: CGPoint, size: CGSize, undoManager: UndoManager?) {
+    
+    /// Add Sticker to main interface, save image data, location and size to StickerMatorModel.
+    ///
+    ///  - Parameters:
+    ///    - image: Sticker Image, converted to UIImage.
+    ///    - location: Center coordinates of the sticker.
+    ///    - zoomScale: The zoom ratio of the main interface when adding stickers.
+    ///    - undoManager: UndoManager.
+    ///
+    /// In order to avoid the original image being too large, a zoom factor is added to this function, and the shortest side of the image is fixed to 200.
+    func addSticker (image: UIImage, at location: CGPoint, zoomScale: CGFloat, undoManager: UndoManager?) {
         if let data = image.pngData() {
+            let factor = min(image.size.width, image.size.height) / 200
             undoPerform(with: undoManager) {
-                self.stickerMator.addSticker(imageData: data, at: (Float(location.x), Float(location.y)), size: (Int(size.width), Int(size.height)))
+                self.stickerMator.addSticker(imageData: data,
+                                             at: (Float(location.x), Float(location.y)),
+                                             size: (Int(image.size.width / factor / zoomScale),
+                                                    Int(image.size.height / factor / zoomScale)))
             }
         }
     }
     
     
-    func addSticker (url: URL, at location: CGPoint, size: CGSize, undoManager: UndoManager?) {
+    func addSticker (url: URL, at location: CGPoint, zoomScale: CGFloat, undoManager: UndoManager?) {
         let session = URLSession.shared
         let publisher = session.dataTaskPublisher(for: url)
             .map {(data, _) in UIImage(data: data)}
@@ -77,14 +91,14 @@ class StickerMatorViewModel: ReferenceFileDocument {
             .receive(on: DispatchQueue.main)
         _ = publisher.sink { [weak self] image in
             if let uiImage = image {
-                self?.addSticker (image: uiImage, at: location, size: size, undoManager: undoManager)
+                self?.addSticker (image: uiImage, at: location, zoomScale: zoomScale, undoManager: undoManager)
             }
         }
     }
     
-    func addSticker (path: String, at location: CGPoint, size: CGSize, undoManager: UndoManager?) {
+    func addSticker (path: String, at location: CGPoint, zoomScale: CGFloat, undoManager: UndoManager?) {
         if let uiImage = UIImage(named: path) {
-            self.addSticker(image: uiImage, at: location, size: size, undoManager: undoManager)
+            self.addSticker(image: uiImage, at: location, zoomScale: zoomScale, undoManager: undoManager)
         }
     }
     

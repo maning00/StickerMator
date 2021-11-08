@@ -9,6 +9,127 @@ import Foundation
 import SwiftUI
 import UniformTypeIdentifiers
 
+
+
+enum ImagePickerType: Identifiable {
+    case camera
+    case library
+    var id: ImagePickerType {self}
+}
+
+func saveFileAndReturnURLString(image: UIImage) -> String? {
+    let userFileName = UUID().uuidString
+    if let data = image.pngData() {
+        let filename = getDocumentsDirectory().appendingPathComponent(userFileName)
+        logger.info("Image saved to \(filename)")
+        try? data.write(to: filename)
+    }
+    if let urlStr = getSavedImage(named: userFileName) {
+        return urlStr
+    }
+    return nil
+}
+
+
+struct UndoButton: View {
+    
+    var undoManager: UndoManager?
+    
+    var body: some View {
+        if let undoManager = undoManager {
+            Menu {
+                Button {
+                    undoManager.undo()
+                } label: {
+                    Label("Undo", systemImage: "arrow.uturn.backward.circle")
+                }
+                Button {
+                    undoManager.redo()
+                } label: {
+                    Label("Redo", systemImage: "arrow.uturn.right.circle")
+                }
+            } label: {
+                Label("Undo/Redo", systemImage: "arrow.counterclockwise.circle")
+            }
+        }
+    }
+}
+
+struct AnimatedActionButton: View {
+    var title: String? = nil
+    var systemImage: String? = nil
+    let action: () -> Void
+    var labelFont: Font? = nil
+    
+    var body: some View {
+        Button {
+            withAnimation {
+                action()
+            }
+        } label: {
+            if title != nil && systemImage != nil {
+                Label(title!, systemImage: systemImage!)
+            } else if title != nil {
+                Text(title!)
+            } else if systemImage != nil {
+                Image(systemName: systemImage!)
+            }
+        }.font(labelFont)
+    }
+}
+
+func getDocumentsDirectory() -> URL {
+    let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+    return paths[0]
+}
+
+/// A view with a button on the top and label on the bottom
+struct IconAboveTextButton: View {
+    
+    var title: String
+    var systemImage: String? = nil
+    var textFont: Font? = nil
+    var iconSize: CGFloat? = nil
+    let action: () -> Void
+    
+    var body: some View {
+        VStack(spacing: 5) {
+            AnimatedActionButton(title: "", systemImage: systemImage, action: action, labelFont: .system(size: iconSize ?? 40))
+            Text(title).font(textFont)
+        }
+        
+    }
+}
+
+func getSavedImage(named: String) -> String? {
+    if let dir = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) {
+        return URL(fileURLWithPath: dir.absoluteString).appendingPathComponent(named).path
+    }
+    return nil
+}
+
+/// Handling horizontal and vertical screens,
+/// combine content into a menu in portrait mode
+struct AdaptiveMenu: ViewModifier {
+    
+    
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    
+    var compact: Bool { horizontalSizeClass == .compact }
+    
+    func body(content: Content) -> some View {
+        if compact {
+            Menu {
+                content
+            } label: {
+                Image(systemName: "ellipsis.circle")
+            }
+        } else {
+            content
+        }
+    }
+}
+
 extension Collection where Element: Identifiable {
     /// This function returns index of specified element
     func findIndex(of element: Element) -> Self.Index? {
@@ -96,30 +217,6 @@ extension Set where Element: Identifiable {
 }
 
 
-struct AnimatedActionButton: View {
-    var title: String? = nil
-    var systemImage: String? = nil
-    let action: () -> Void
-    var labelFont: Font? = nil
-    
-    var body: some View {
-        Button {
-            withAnimation {
-                action()
-            }
-        } label: {
-            if title != nil && systemImage != nil {
-                Label(title!, systemImage: systemImage!)
-            } else if title != nil {
-                Text(title!)
-            } else if systemImage != nil {
-                Image(systemName: systemImage!)
-            }
-        }.font(labelFont)
-    }
-}
-
-
 extension RangeReplaceableCollection where Element: Identifiable {
     
     /// Find the element and remove it
@@ -146,58 +243,6 @@ extension RangeReplaceableCollection where Element: Identifiable {
     }
 }
 
-func getDocumentsDirectory() -> URL {
-    let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-    return paths[0]
-}
-
-/// A view with a button on the top and label on the bottom
-struct IconAboveTextButton: View {
-    
-    var title: String
-    var systemImage: String? = nil
-    var textFont: Font? = nil
-    var iconSize: CGFloat? = nil
-    let action: () -> Void
-    
-    var body: some View {
-        VStack(spacing: 5) {
-            AnimatedActionButton(title: "", systemImage: systemImage, action: action, labelFont: .system(size: iconSize ?? 40))
-            Text(title).font(textFont)
-        }
-        
-    }
-}
-
-func getSavedImage(named: String) -> String? {
-    if let dir = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) {
-        return URL(fileURLWithPath: dir.absoluteString).appendingPathComponent(named).path
-    }
-    return nil
-}
-
-/// Handling horizontal and vertical screens,
-/// combine content into a menu in portrait mode
-struct AdaptiveMenu: ViewModifier {
-    
-    
-    @Environment(\.horizontalSizeClass) var horizontalSizeClass
-    
-    var compact: Bool { horizontalSizeClass == .compact }
-    
-    func body(content: Content) -> some View {
-        if compact {
-            Menu {
-                content
-            } label: {
-                Image(systemName: "ellipsis.circle")
-            }
-        } else {
-            content
-        }
-    }
-}
-
 extension View {
     func adaptiveMenuToolBar<Content>(@ViewBuilder content: () -> Content) -> some View where Content: View {
         self.toolbar {
@@ -207,46 +252,22 @@ extension View {
 }
 
 
-enum ImagePickerType: Identifiable {
-    case camera
-    case library
-    var id: ImagePickerType {self}
-}
-
-func saveFileAndReturnURLString(image: UIImage) -> String? {
-    let userFileName = UUID().uuidString
-    if let data = image.pngData() {
-        let filename = getDocumentsDirectory().appendingPathComponent(userFileName)
-        logger.info("Image saved to \(filename)")
-        try? data.write(to: filename)
-    }
-    if let urlStr = getSavedImage(named: userFileName) {
-        return urlStr
-    }
-    return nil
-}
-
-
-struct UndoButton: View {
-    
-    var undoManager: UndoManager?
-    
-    var body: some View {
-        if let undoManager = undoManager {
-            Menu {
-                Button {
-                    undoManager.undo()
-                } label: {
-                    Label("Undo", systemImage: "arrow.uturn.backward.circle")
-                }
-                Button {
-                    undoManager.redo()
-                } label: {
-                    Label("Redo", systemImage: "arrow.uturn.right.circle")
-                }
-            } label: {
-                Label("Undo/Redo", systemImage: "arrow.counterclockwise.circle")
-            }
+extension View {
+    func saveAsImage(mainImage: UIImage?) -> UIImage {
+        let controller = UIHostingController(rootView: self)
+        var targetSize = CGSize(width: 1000, height: 1000)
+        
+        if let mainImage = mainImage {
+            targetSize = mainImage.size
+        }
+        
+        controller.view.bounds = CGRect(origin: .zero, size: targetSize)
+        controller.view.backgroundColor = .clear
+        
+        let renderer = UIGraphicsImageRenderer(size: targetSize)
+        
+        return renderer.image { _ in
+            controller.view.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
         }
     }
 }

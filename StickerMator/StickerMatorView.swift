@@ -25,8 +25,6 @@ struct StickerMatorView: View {
         }
     }
     
-    var defaultStickerSize: CGSize = CGSize(width: 300, height: 300)
-    
     @ViewBuilder
     private var deleteSelectedStickerButton: some View {
         if !selectedSticker.isEmpty {
@@ -60,7 +58,7 @@ struct StickerMatorView: View {
                             .border(Color.blue, width: selectedSticker.containsMatching(sticker) ? 4 : 0)
                             .frame(width: frameSize(for: sticker).width, height: frameSize(for: sticker).height)
                             .scaleEffect(selectedSticker.containsMatching(sticker) ? zoomScale * stickerGestureZoomScale : zoomScale)
-                            .offset(selectedSticker.containsMatching(sticker) ? stickerGesturePanOffset : .zero)
+                            .offset(selectedSticker.containsMatching(sticker) ? stickerGesturePanOffset : .zero) // for transition animation
                             .position(position(for: sticker))
                             .onTapGesture {
                                 withAnimation {
@@ -82,11 +80,15 @@ struct StickerMatorView: View {
                     AnimatedActionButton(title: "Show StickerBar",systemImage: "theatermasks.fill",
                                          action: { showBottomBar.toggle() })
                 }
-                
+                AnimatedActionButton(title: "Save", systemImage: "square.and.arrow.down") {
+                    let saveImage = self.documentBody.saveAsImage(mainImage: document.mainImage)
+                    let imageSaver = ImageSaver()
+                    imageSaver.saveToAlbum(image: saveImage)
+                }
             }
             .clipped()
             .onDrop(of: [.url, .image, .plainText], isTargeted: nil) { providers, location in
-                drop(providers: providers, at: location, in: geometry)
+                drop(providers: providers, at: location)
             }
             .gesture(zoomGesture()
                         .simultaneously(with: singleTapToDeselectAllSticker().simultaneously(with: panGesture())))
@@ -118,7 +120,7 @@ struct StickerMatorView: View {
         }
     }
     
-    /// Handle picked image and set as mainImage
+    /// Handle image picked from camera or library and set as mainImage
     private func handlePickedPhoto(_ image: UIImage?) {
         logger.info("handlePickedPhoto catched image")
         if let image = image {
@@ -142,26 +144,29 @@ struct StickerMatorView: View {
     
     /// Drop Handler
     ///
+    /// - Parameters:
+    ///   - providers: OnDrag NSItemProvider
+    ///   - location: Drop location
+    ///
+    /// - Returns: Return whether to accept the drop operation.
+    ///
     /// There're 3 types of object to handle: URL, UIImage and String:
     /// - **URL** is online content, should be downloaded and handle
     /// - **UIImage** is image that can display directly
     /// - **String** is path of the image, the image is already downloaded on the device
-    private func drop(providers: [NSItemProvider], at location: CGPoint, in geometry: GeometryProxy) -> Bool {
+    private func drop(providers: [NSItemProvider], at location: CGPoint) -> Bool {
         var found = providers.loadObjects(ofType: URL.self) { url in
-            document.addSticker(url: url, at: location,
-                                size: defaultStickerSize / zoomScale, undoManager: undoManager)
+            document.addSticker(url: url, at: location, zoomScale: zoomScale, undoManager: undoManager)
         }
         if !found {
             found = providers.loadObjects(ofType: UIImage.self) { image in
-                document.addSticker(image: image, at: location,
-                                    size: defaultStickerSize / zoomScale, undoManager: undoManager)
+                document.addSticker(image: image, at: location, zoomScale: zoomScale, undoManager: undoManager)
                 
             }
         }
         if !found {
             found = providers.loadObjects(ofType: String.self) { path in
-                document.addSticker(path: path, at: location,
-                                    size: defaultStickerSize / zoomScale, undoManager: undoManager)
+                document.addSticker(path: path, at: location, zoomScale: zoomScale, undoManager: undoManager)
             }
         }
         return found
@@ -190,6 +195,8 @@ struct StickerMatorView: View {
         )
     }
     
+    /// Get sticker size.
+    ///  - Returns: Sticker's size converted to CGSize.
     private func frameSize(for sticker: StickerMatorModel.Sticker) -> CGSize {
         CGSize(width: sticker.width, height: sticker.height)
     }
@@ -204,8 +211,12 @@ struct StickerMatorView: View {
         steadyZoomScale * gestureZoomScale
     }
     
+    /// StickerMator main interface's gesture.
+    ///
+    /// This gesture may occur in **two** cases: the case where some stickers are selected and the case where no sticker is selected.
+    ///  - In the first case, triggering the gesture will zoom in/out on the corresponding sticker, and the size of the sticker will be updated at the end of the gesture.
+    ///  - In the second case, triggering the gesture changes the overall zoomScale, and all elements in the image are zoomed in/out.
     private func zoomGesture() -> some Gesture {
-        // once selected zoomGesture will apply in all area
         
         return MagnificationGesture()
             .updating($stickerGestureZoomScale) { latestGestureScale, stickerGestureZoomScale, _ in
@@ -240,6 +251,11 @@ struct StickerMatorView: View {
         (steadyPanOffset + gesturePanOffset)
     }
     
+    /// StickerMator main interface's gesture.
+    ///
+    /// This gesture may occur in **two** cases: the case where some stickers are selected and the case where no sticker is selected.
+    ///  - In the first case, triggering the gesture will move the corresponding sticker, and the position of the sticker will be updated at the end of the gesture.
+    ///  - In the second case, triggering the gesture changes the overall PanOffset, and all elements in the image are moved.
     private func panGesture(for sticker: StickerMatorModel.Sticker? = nil) -> some Gesture {
         if let sticker = sticker, selectedSticker.containsMatching(sticker) {
             
