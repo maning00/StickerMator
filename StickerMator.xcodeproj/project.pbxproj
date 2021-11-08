@@ -18,8 +18,8 @@
 		FB7CF027273552FF00D3FAB0 /* MLMultiArray+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7CF026273552FF00D3FAB0 /* MLMultiArray+Image.swift */; };
 		FB7CF02A273555A200D3FAB0 /* BackgroundRemoval.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7CF029273555A200D3FAB0 /* BackgroundRemoval.swift */; };
 		FB7CF02C273556DE00D3FAB0 /* DeepLabV3.mlkitmodel in Sources */ = {isa = PBXBuildFile; fileRef = FB7CF02B273556DE00D3FAB0 /* DeepLabV3.mlkitmodel */; };
-		FBAB6B6B27316F9700FA4539 /* StickerSetEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB6B6A27316F9700FA4539 /* StickerSetEditor.swift */; };
-		FBAB6B6D2731839E00FA4539 /* StickerSetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB6B6C2731839E00FA4539 /* StickerSetManager.swift */; };
+		FBAB6B6B27316F9700FA4539 /* StickerPackEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB6B6A27316F9700FA4539 /* StickerPackEditor.swift */; };
+		FBAB6B6D2731839E00FA4539 /* StickerPackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB6B6C2731839E00FA4539 /* StickerPackManager.swift */; };
 		FBAB6B6F2732619200FA4539 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB6B6E2732619200FA4539 /* ImagePicker.swift */; };
 		FBAB6B712732627800FA4539 /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB6B702732627800FA4539 /* Camera.swift */; };
 		FBAB6B7F2732958800FA4539 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = FBAB6B7E2732958800FA4539 /* Logging */; };
@@ -44,8 +44,8 @@
 		FB7CF029273555A200D3FAB0 /* BackgroundRemoval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundRemoval.swift; sourceTree = "<group>"; };
 		FB7CF02B273556DE00D3FAB0 /* DeepLabV3.mlkitmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = DeepLabV3.mlkitmodel; sourceTree = "<group>"; };
 		FB7CF02E2736233F00D3FAB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		FBAB6B6A27316F9700FA4539 /* StickerSetEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerSetEditor.swift; sourceTree = "<group>"; };
-		FBAB6B6C2731839E00FA4539 /* StickerSetManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerSetManager.swift; sourceTree = "<group>"; };
+		FBAB6B6A27316F9700FA4539 /* StickerPackEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPackEditor.swift; sourceTree = "<group>"; };
+		FBAB6B6C2731839E00FA4539 /* StickerPackManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPackManager.swift; sourceTree = "<group>"; };
 		FBAB6B6E2732619200FA4539 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		FBAB6B702732627800FA4539 /* Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
 		FBAB6B9A2733ADEE00FA4539 /* StickerMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerMaker.swift; sourceTree = "<group>"; };
@@ -97,8 +97,8 @@
 				FBAB6B6E2732619200FA4539 /* ImagePicker.swift */,
 				FBD5400E2738D20100C5CFAD /* ImageSaver.swift */,
 				FBAB6B702732627800FA4539 /* Camera.swift */,
-				FBAB6B6A27316F9700FA4539 /* StickerSetEditor.swift */,
-				FBAB6B6C2731839E00FA4539 /* StickerSetManager.swift */,
+				FBAB6B6A27316F9700FA4539 /* StickerPackEditor.swift */,
+				FBAB6B6C2731839E00FA4539 /* StickerPackManager.swift */,
 				FBC250E227311A2B005DAD6C /* StickerStorage.swift */,
 				FB6A061F272F7CF6000DBA59 /* Assets.xcassets */,
 				FB6A0621272F7CF6000DBA59 /* Preview Content */,
@@ -215,7 +215,7 @@
 				FBAB6B6F2732619200FA4539 /* ImagePicker.swift in Sources */,
 				FBC250E327311A2B005DAD6C /* StickerStorage.swift in Sources */,
 				FB7CF025273552EA00D3FAB0 /* CGImage+RawBytes.swift in Sources */,
-				FBAB6B6B27316F9700FA4539 /* StickerSetEditor.swift in Sources */,
+				FBAB6B6B27316F9700FA4539 /* StickerPackEditor.swift in Sources */,
 				FB7CF02C273556DE00D3FAB0 /* DeepLabV3.mlkitmodel in Sources */,
 				FB6A062A272F868D000DBA59 /* StickerMatorModel.swift in Sources */,
 				FB7CF027273552FF00D3FAB0 /* MLMultiArray+Image.swift in Sources */,
@@ -225,7 +225,7 @@
 				FBC250E1273118DA005DAD6C /* StickerBottomBar.swift in Sources */,
 				FBAB6B9B2733ADEE00FA4539 /* StickerMaker.swift in Sources */,
 				FBD5400F2738D20100C5CFAD /* ImageSaver.swift in Sources */,
-				FBAB6B6D2731839E00FA4539 /* StickerSetManager.swift in Sources */,
+				FBAB6B6D2731839E00FA4539 /* StickerPackManager.swift in Sources */,
 				FB6A062E272FB0C9000DBA59 /* Helper.swift in Sources */,
 				FB6A061C272F7CF4000DBA59 /* StickerMatorApp.swift in Sources */,
 				FB6A062C272F8F1A000DBA59 /* StickerMatorViewModel.swift in Sources */,

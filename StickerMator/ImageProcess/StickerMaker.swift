@@ -8,18 +8,33 @@
 import SwiftUI
 import CoreImage.CIFilterBuiltins
 
+/// StickerMaker is a simple photo editor.
+///
+/// This editor can add some filters to the image and remove the background of the image.
+/// When initialize, ``showDialogue`` is required to import image.
 struct StickerMaker: View {
     
+    /// FilterIntensity controlled by slider.
     @State private var filterIntensity = 0.5
+    
+    /// A StickerStorage can get stickers from.
     @EnvironmentObject var store: StickerStorage
+    
     @Environment(\.dismiss) var dissmiss
+    
+    /// Some filters' information.
     @ObservedObject var editorDocument: StickerMakerDocument
     
+    /// Image shown to the user.
     @State var imageToShow: UIImage?
+    
     @State private var currentFilter: CIFilter = CIFilter.sepiaTone()
     @State private var selectedFilter = Set<StickerMakerDocument.Filter>()
+    
+    /// The first image imported.
     @State private var originalImage: UIImage?
     
+    /// Show different dialogs based on DialogueType
     enum DialogueType: Identifiable {
         case imagePicker
         case saveList
@@ -28,9 +43,12 @@ struct StickerMaker: View {
     
     @State var showDialogue: DialogueType? = nil
     
+    /// CIContext used to create the image.
     var context = CIContext()
     
     var body: some View {
+        
+        /// If intensity is set, process the image.
         let intensity = Binding<Double>(
             get: { self.filterIntensity },
             set: {
@@ -107,10 +125,11 @@ struct StickerMaker: View {
     
     // MARK: - save option
     
+    /// A list showing existing sticker packs
     var saveList: some View {
         NavigationView {
             List {
-                ForEach(store.stickerSets) { stickerset in
+                ForEach(store.stickerPacks) { stickerset in
                     VStack {
                         AnimatedActionButton(title: stickerset.name) {
                             saveImageToStickerSet(imageToShow, stickerSetToAdd: stickerset)
@@ -128,13 +147,13 @@ struct StickerMaker: View {
         }
     }
     
-    
-    private func saveImageToStickerSet(_ image: UIImage?, stickerSetToAdd: StickerSet) {
+    /// Save to the sticker pack specified by the user.
+    private func saveImageToStickerSet(_ image: UIImage?, stickerSetToAdd: StickerPack) {
         logger.info("saveImageToStickerSet catched image")
         if let image = image {
             if let urlStr = saveFileAndReturnURLString(image: image) {
-                if let index = store.stickerSets.findIndex(of: stickerSetToAdd) {
-                    store.stickerSets[index].stickers.append(urlStr)
+                if let index = store.stickerPacks.findIndex(of: stickerSetToAdd) {
+                    store.stickerPacks[index].stickers.append(urlStr)
                 }
             } else {
                 logger.warning("Get URL failed")
@@ -145,11 +164,13 @@ struct StickerMaker: View {
     
     // MARK: - filters
     
+    /// Set the current filter
     func setFilter(_ filter: CIFilter) {
         currentFilter = filter
         processImage()
     }
     
+    /// Load chosen image from photo library.
     func loadImage(uiImage: UIImage?) {
         if let uiImage = uiImage {
             originalImage = uiImage
@@ -158,6 +179,7 @@ struct StickerMaker: View {
         showDialogue = nil
     }
     
+    /// Process images using filter.
     func processImage() {
         guard let originalImage = originalImage else { return }
         let beginImage = CIImage(image: originalImage)

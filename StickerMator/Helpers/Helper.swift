@@ -10,13 +10,14 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 
-
+/// An enum used to show different dialogue based on cases.
 enum ImagePickerType: Identifiable {
     case camera
     case library
     var id: ImagePickerType {self}
 }
 
+/// A function save image as a file and returns its URL string.
 func saveFileAndReturnURLString(image: UIImage) -> String? {
     let userFileName = UUID().uuidString
     if let data = image.pngData() {
@@ -55,6 +56,7 @@ struct UndoButton: View {
     }
 }
 
+/// A button with animation.
 struct AnimatedActionButton: View {
     var title: String? = nil
     var systemImage: String? = nil
@@ -101,6 +103,7 @@ struct IconAboveTextButton: View {
     }
 }
 
+/// A function to append filename to path
 func getSavedImage(named: String) -> String? {
     if let dir = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) {
         return URL(fileURLWithPath: dir.absoluteString).appendingPathComponent(named).path
@@ -198,7 +201,7 @@ extension CGSize {
     }
 }
 
-/// **containsMatching**: Check if the element is in the set
+
 extension Set where Element: Identifiable {
     
     /// If there is this **element** in the Set, delete it, otherwise insert this element
@@ -253,6 +256,7 @@ extension View {
 
 
 extension View {
+    /// A method convers the view to an UIImage.
     func saveAsImage(mainImage: UIImage?) -> UIImage {
         let controller = UIHostingController(rootView: self)
         var targetSize = CGSize(width: 1000, height: 1000)

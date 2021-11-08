@@ -80,11 +80,6 @@ struct StickerMatorView: View {
                     AnimatedActionButton(title: "Show StickerBar",systemImage: "theatermasks.fill",
                                          action: { showBottomBar.toggle() })
                 }
-                AnimatedActionButton(title: "Save", systemImage: "square.and.arrow.down") {
-                    let saveImage = self.documentBody.saveAsImage(mainImage: document.mainImage)
-                    let imageSaver = ImageSaver()
-                    imageSaver.saveToAlbum(image: saveImage)
-                }
             }
             .clipped()
             .onDrop(of: [.url, .image, .plainText], isTargeted: nil) { providers, location in

@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
-import MobileCoreServices
 
+/// A view includes horizontal slide bar and a control button.
 struct StickerBottomBar: View {
     
     @EnvironmentObject var store: StickerStorage
@@ -21,14 +21,14 @@ struct StickerBottomBar: View {
     }
     
     @State private var chosenIndex = 0
-    @State private var stickersetToEdit: StickerSet? = nil
+    @State private var stickersetToEdit: StickerPack? = nil
     @State private var managing = false
     @State private var showEditor = false
     
     @ViewBuilder
     var contextMenu: some View {
         AnimatedActionButton(title: "New", systemImage: "plus.circle") {
-            store.addStickerSet(name: "New", at: chosenIndex)
+            store.addStickerPack(name: "New", at: chosenIndex)
             stickersetToEdit = store.stickerSet(at: chosenIndex)
         }
         AnimatedActionButton(title: "Manager", systemImage: "slider.vertical.3") {
@@ -42,9 +42,9 @@ struct StickerBottomBar: View {
     
     var gotoMenu: some View {
         Menu {
-            ForEach(store.stickerSets) { palette in
+            ForEach(store.stickerPacks) { palette in
                 AnimatedActionButton(title: palette.name) {
-                    if let index = store.stickerSets.findIndex(of: palette) {
+                    if let index = store.stickerPacks.findIndex(of: palette) {
                         chosenIndex = index
                     }
                 }
@@ -56,18 +56,18 @@ struct StickerBottomBar: View {
     
     var controlButton: some View {
         AnimatedActionButton(systemImage: "circle.grid.cross",
-                             action: { chosenIndex = (chosenIndex + 1) % store.stickerSets.count },
+                             action: { chosenIndex = (chosenIndex + 1) % store.stickerPacks.count },
                              labelFont: .system(size: 40)).contextMenu {contextMenu}
     }
     
     
-    func body(for stickerSet: StickerSet) -> some View {
+    func body(for stickerSet: StickerPack) -> some View {
         HStack {
             ScrollingStickerView(images: store.stickerSet(at: chosenIndex).stickers)
             Text(stickerSet.name)
         }
         .sheet(isPresented: $managing) {
-            StickerSetManager()
+            StickerPackManager()
         }
         .sheet(isPresented: $showEditor) {
             StickerMaker(editorDocument: StickerMakerDocument(), showDialogue: .imagePicker)

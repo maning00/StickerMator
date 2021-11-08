@@ -7,17 +7,21 @@
 
 import SwiftUI
 
-struct StickerSet: Identifiable, Hashable, Codable {
+///
+struct StickerPack: Identifiable, Hashable, Codable {
     let id: Int
     var name: String
     var stickers: [String]
 }
 
-
+/// A class stores many sets of stickers,
+/// 
+/// the sticker pack owned by the user is stored here.
 class StickerStorage: ObservableObject {
     var name: String = "Default"
     
-    @Published var stickerSets = [StickerSet]() {
+    /// An array stores StickerPacks
+    @Published var stickerPacks = [StickerPack]() {
         didSet {
             do {
                 let data = try jsonEncode()
@@ -30,26 +34,27 @@ class StickerStorage: ObservableObject {
     
     private func restoreFromUserDefaults() throws {
         if let stickerSetsPlist = UserDefaults.standard.data(forKey: name) {
-            self.stickerSets = try JSONDecoder().decode([StickerSet].self, from: stickerSetsPlist)
-            logger.info("Loaded defaults: \(stickerSets)")
+            self.stickerPacks = try JSONDecoder().decode([StickerPack].self, from: stickerSetsPlist)
+            logger.info("Loaded defaults: \(stickerPacks)")
         }
     }
     
     init(json: Data) throws {
-        self.stickerSets = try JSONDecoder().decode([StickerSet].self, from: json)
+        self.stickerPacks = try JSONDecoder().decode([StickerPack].self, from: json)
     }
     
     init(url: String) throws {
         let data = try Data(contentsOf: URL(string: url)!)
-        self.stickerSets = try JSONDecoder().decode([StickerSet].self, from: data)
+        self.stickerPacks = try JSONDecoder().decode([StickerPack].self, from: data)
     }
     
+    /// Some Stickers are come with the app.
     init(name: String) {
         self.name = name
         try? restoreFromUserDefaults()
-        if stickerSets.isEmpty {
+        if stickerPacks.isEmpty {
             logger.info("Using default stickers")
-            addStickerSet(name: "Dogs", stickers: [
+            addStickerPack(name: "Dogs", stickers: [
                 "dog_01", "dog_02", "dog_03",
                 "dog_04", "dog_05", "dog_06",
                 "dog_07", "dog_08", "dog_09",
@@ -57,7 +62,7 @@ class StickerStorage: ObservableObject {
                 "dog_13", "dog_14", "dog_15",
                 "dog_16", "dog_17"
             ])
-            addStickerSet(name: "IceBear", stickers: [
+            addStickerPack(name: "IceBear", stickers: [
                 "icebear_01", "icebear_02", "icebear_03",
                 "icebear_04", "icebear_05", "icebear_06",
                 "icebear_07", "icebear_08", "icebear_09",
@@ -68,7 +73,7 @@ class StickerStorage: ObservableObject {
                 "icebear_22", "icebear_23", "icebear_24",
                 "icebear_25", "icebear_26"
             ])
-            addStickerSet(name: "Cat", stickers: [
+            addStickerPack(name: "Cat", stickers: [
                 "cat_01", "cat_02", "cat_03",
                 "cat_04", "cat_05", "cat_06",
                 "cat_07", "cat_08", "cat_09",
@@ -78,7 +83,7 @@ class StickerStorage: ObservableObject {
                 "cat_19", "cat_20", "cat_21",
                 "cat_22", "cat_23", "cat_24"
             ])
-            addStickerSet(name: "Penguin", stickers: [
+            addStickerPack(name: "Penguin", stickers: [
                 "penguin_01", "penguin_02", "penguin_03",
                 "penguin_04", "penguin_05", "penguin_06",
                 "penguin_07", "penguin_08", "penguin_09",
@@ -94,24 +99,34 @@ class StickerStorage: ObservableObject {
     }
     
     func jsonEncode() throws -> Data {
-        return try JSONEncoder().encode(stickerSets)
+        return try JSONEncoder().encode(stickerPacks)
     }
     
-    func addStickerSet(name: String, stickers: [String] = [], at index: Int = 0) {
-        let unique = (stickerSets.max(by: { $0.id < $1.id })?.id ?? 0) + 1// get maxID + 1
-        let safeIndex = min(max(index, 0), stickerSets.count)
-        let set = StickerSet(id: unique, name: name, stickers: stickers)
-        stickerSets.insert(set, at: safeIndex)
+    /// Adding sticker set.
+    ///
+    ///  - Parameters:
+    ///    - name: StickerPack name.
+    ///    - stickers: Sticker images.
+    ///    - index: The index position expected to be inserted.
+    ///
+    /// StickerPack ID is different from index, index is its position in the array, ID is its unique identity.
+    func addStickerPack(name: String, stickers: [String] = [], at index: Int = 0) {
+        let unique = (stickerPacks.max(by: { $0.id < $1.id })?.id ?? 0) + 1 // get maxID + 1
+        let safeIndex = min(max(index, 0), stickerPacks.count)
+        let set = StickerPack(id: unique, name: name, stickers: stickers)
+        stickerPacks.insert(set, at: safeIndex)
     }
     
-    func stickerSet(at index: Int) -> StickerSet {
-        let safeIndex = min(max(index, 0), stickerSets.count - 1)
-        return stickerSets[safeIndex]
+    /// Get the sticker pack at the specified index.
+    func stickerSet(at index: Int) -> StickerPack {
+        let safeIndex = min(max(index, 0), stickerPacks.count - 1)
+        return stickerPacks[safeIndex]
     }
     
+    /// Remove the sticker pack at the specified index.
     func removeStickerSet(at index: Int) {
-        if stickerSets.count > 1, stickerSets.indices.contains(index) {
-            stickerSets.remove(at: index)
+        if stickerPacks.count > 1, stickerPacks.indices.contains(index) {
+            stickerPacks.remove(at: index)
         }
     }
 }

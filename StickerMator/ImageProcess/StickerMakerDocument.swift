@@ -9,6 +9,7 @@ import SwiftUI
 
 class StickerMakerDocument: ObservableObject {
     
+    /// A struct stores CIFilter
     struct Filter: Identifiable, Hashable {
         var name: String
         let id: Int

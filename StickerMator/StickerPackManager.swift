@@ -1,5 +1,5 @@
 //
-//  StickerSetManager.swift
+//  StickerPackManager.swift
 //  StickerMator
 //
 //  Created by Ning Ma on 11/2/21.
@@ -7,7 +7,10 @@
 
 import SwiftUI
 
-struct StickerSetManager: View {
+/// A manager view that can manage sticker packs.
+///
+/// This view shows existed sticker packs, packs can be removed or reordered.
+struct StickerPackManager: View {
     @EnvironmentObject var store: StickerStorage
     @Environment(\.dismiss) var dissmiss
     
@@ -16,21 +19,21 @@ struct StickerSetManager: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(store.stickerSets) { stickerset in
-                    NavigationLink(destination: StickerSetEditor(stickerSetToEdit: $store.stickerSets[stickerset])) {
+                ForEach(store.stickerPacks) { stickerpack in
+                    NavigationLink(destination: StickerPackEditor(stickerPackToEdit: $store.stickerPacks[stickerpack])) {
                         VStack {
-                            Text(stickerset.name)
+                            Text(stickerpack.name)
                         }
                     }
                 }
                 .onDelete { indexSet in
-                    store.stickerSets.remove(atOffsets: indexSet)
-                    if store.stickerSets.isEmpty {
-                        store.addStickerSet(name: "Empty", at: 1)
+                    store.stickerPacks.remove(atOffsets: indexSet)
+                    if store.stickerPacks.isEmpty {
+                        store.addStickerPack(name: "Empty", at: 1)
                     }
                 }
                 .onMove { indexSet, newOffset in        // edit sequence
-                    store.stickerSets.move(fromOffsets: indexSet, toOffset: newOffset)
+                    store.stickerPacks.move(fromOffsets: indexSet, toOffset: newOffset)
                 }
             }.navigationTitle("Manage Sticker")
                 .toolbar {
@@ -49,6 +52,6 @@ struct StickerSetManager: View {
 
 struct StickerSetManager_Previews: PreviewProvider {
     static var previews: some View {
-        StickerSetManager()
+        StickerPackManager()
     }
 }

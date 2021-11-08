@@ -8,12 +8,23 @@
 import SwiftUI
 import Vision
 
+
+/// A class that makes image segementation and remove background.
+///
+/// Each time it makes a background removal, the class:
+/// - Creates a `VNImageRequestHandler` with an image.
+/// - Starts an image segementation request for that image.
+/// - Converts the feature value to a ``CGImage``.
+/// - Use ``CIFilter.blendWithMask`` to remove background.
 class BackgroundRemoval {
     
+    /// Image to be processed.
     var inputImage: UIImage
     
+    /// Processed image.
     private var outputImage: UIImage?
     
+    /// The CoreML image segementation model
     private static let imageSegementationModel = createModel()
     
     init(input: UIImage) {
@@ -53,7 +64,12 @@ class BackgroundRemoval {
         return self.outputImage
     }
     
-    // Obtain maskimage
+    /// The completion handler method that Vision calls when it completes a request.
+    /// - Parameters:
+    ///   - request: A Vision request.
+    ///   - error: An error if the request produced an error; otherwise `nil`.
+    ///
+    ///   The method get a MultiArray of feature values, then use CoreMLHelpers to transform MultiArray to CGImage.
     private func segementationRequestHandler(request: VNRequest, error: Error?) {
         if let observations = request.results as? [VNCoreMLFeatureValueObservation],
            let featureValueArray = observations.first?.featureValue.multiArrayValue {
@@ -63,7 +79,11 @@ class BackgroundRemoval {
         }
     }
     
-    /// Remove background using CIFilter.blendWithMask
+    /// The method remove ``inputImage``'s background using a mask image.
+    ///
+    ///  - Parameters: maskImage: The mask image obtained from model.
+    ///
+    /// Remove background using ``CIFilter.blendWithMask``
     /// CIFilter.blendWithMask uses values from a grayscale mask to interpolate between an image and the background.
     /// When a mask green value is 0.0, the result is the background.
     /// When the mask green value is 1.0, the result is the image.
