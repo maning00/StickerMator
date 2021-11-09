@@ -9,10 +9,20 @@ import SwiftUI
 
 // UIKit => Coordinator => SwiftUI
 
+/// An camera image picker, pick image from camera.
+///
+/// The Camera struct uses Coordinator to build a bridge between SwiftUI and UIKit.
 struct Camera: UIViewControllerRepresentable {
+    
+    /// An image handler receives UIImage and process
     var imageHandleFunc: (UIImage?) -> Void
     
     func makeUIViewController(context: Context) -> UIImagePickerController {
+        
+        /// An UIImagePickerController created and set options.
+        ///
+        /// Here, allowsEditing is ``true``, user can crop image.
+        /// sourceType is set to ``.camera``,  the image will be captured from the camera.
         let picker = UIImagePickerController()
         picker.allowsEditing = true
         picker.sourceType = .camera

@@ -58,10 +58,10 @@ struct UndoButton: View {
 
 /// A button with animation.
 struct AnimatedActionButton: View {
-    var title: String? = nil
-    var systemImage: String? = nil
+    var title: String?
+    var systemImage: String?
     let action: () -> Void
-    var labelFont: Font? = nil
+    var labelFont: Font?
     
     var body: some View {
         Button {
@@ -89,14 +89,15 @@ func getDocumentsDirectory() -> URL {
 struct IconAboveTextButton: View {
     
     var title: String
-    var systemImage: String? = nil
-    var textFont: Font? = nil
-    var iconSize: CGFloat? = nil
+    var systemImage: String?
+    var textFont: Font?
+    var iconSize: CGFloat?
     let action: () -> Void
     
     var body: some View {
         VStack(spacing: 5) {
-            AnimatedActionButton(title: "", systemImage: systemImage, action: action, labelFont: .system(size: iconSize ?? 40))
+            AnimatedActionButton(title: "", systemImage: systemImage,
+                                 action: action, labelFont: .system(size: iconSize ?? 40))
             Text(title).font(textFont)
         }
         
@@ -105,7 +106,8 @@ struct IconAboveTextButton: View {
 
 /// A function to append filename to path
 func getSavedImage(named: String) -> String? {
-    if let dir = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) {
+    if let dir = try? FileManager.default.url(for: .documentDirectory,
+                                                 in: .userDomainMask, appropriateFor: nil, create: false) {
         return URL(fileURLWithPath: dir.absoluteString).appendingPathComponent(named).path
     }
     return nil
@@ -147,7 +149,7 @@ extension Array where Element == NSItemProvider {
     func loadObjects<T>(ofType theType: T.Type, firstOnly: Bool = false,
                         using load: @escaping (T) -> Void) -> Bool where T: NSItemProviderReading {
         if let provider = first(where: { $0.canLoadObject(ofClass: theType) }) {
-            provider.loadObject(ofClass: theType) { object, error in
+            provider.loadObject(ofClass: theType) { object, _ in
                 if let value = object as? T {
                     DispatchQueue.main.async {
                         load(value)
@@ -161,7 +163,7 @@ extension Array where Element == NSItemProvider {
     func loadObjects<T>(ofType theType: T.Type, firstOnly: Bool = false,
                         using load: @escaping (T) -> Void) -> Bool where T: _ObjectiveCBridgeable, T._ObjectiveCType: NSItemProviderReading {
         if let provider = first(where: { $0.canLoadObject(ofClass: theType) }) {
-            let _ = provider.loadObject(ofClass: theType) { object, error in
+            let _ = provider.loadObject(ofClass: theType) { object, _ in
                 if let value = object {
                     DispatchQueue.main.async {
                         load(value)
@@ -257,6 +259,8 @@ extension View {
 
 extension View {
     /// A method convers the view to an UIImage.
+    ///
+    /// This method is temporarily unused.
     func saveAsImage(mainImage: UIImage?) -> UIImage {
         let controller = UIHostingController(rootView: self)
         var targetSize = CGSize(width: 1000, height: 1000)

@@ -69,7 +69,8 @@ class StickerMatorViewModel: ReferenceFileDocument {
     ///    - zoomScale: The zoom ratio of the main interface when adding stickers.
     ///    - undoManager: UndoManager.
     ///
-    /// In order to avoid the original image being too large, a zoom factor is added to this function, and the shortest side of the image is fixed to 200.
+    /// In order to avoid the original image being too large, a zoom factor is added to this function,
+    /// and the shortest side of the image is fixed to 200.
     func addSticker (image: UIImage, at location: CGPoint, zoomScale: CGFloat, undoManager: UndoManager?) {
         if let data = image.pngData() {
             let factor = min(image.size.width, image.size.height) / 200

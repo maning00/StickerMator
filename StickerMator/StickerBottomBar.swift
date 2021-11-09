@@ -21,7 +21,7 @@ struct StickerBottomBar: View {
     }
     
     @State private var chosenIndex = 0
-    @State private var stickersetToEdit: StickerPack? = nil
+    @State private var stickersetToEdit: StickerPack?
     @State private var managing = false
     @State private var showEditor = false
     

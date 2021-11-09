@@ -9,10 +9,19 @@ import SwiftUI
 
 // UIKit => Coordinator => SwiftUI
 
+/// An image picker, pick image from photo library.
+///
+/// ImagePicker uses Coordinator to build a bridge between SwiftUI and UIKit.
 struct ImagePicker: UIViewControllerRepresentable {
+    
+    /// An image handler receives UIImage and process
     var imageHandleFunc: (UIImage?) -> Void
     
     func makeUIViewController(context: Context) -> UIImagePickerController {
+        
+        /// An UIImagePickerController created and set options.
+        ///
+        /// Here, allowsEditing is ``true``, user can crop image.
         let picker = UIImagePickerController()
         picker.allowsEditing = true
         picker.delegate = context.coordinator
