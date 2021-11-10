@@ -33,7 +33,7 @@ StickerMator is a SwiftUI based iOS app that runs with iPhone and iPad. using th
 - **Swift 5**
 - **Xcode 13**
 
-## Known Issues
+## Next Steps
 - **Zoom anchor point**: When the overall scaling is performed, the scaling anchor points of the sticker and the background image will have inconsistent problems, and displacement will occur between the sticker and the background image when scaling. To solve this problem, you need to fix the scaling anchor points of the sticker and the background image.
 - **Save to photo albums**: Still haven't found a better way to save as an image, when trying to use UIHostingController to read the View and render it with UIGraphicsImageRenderer, the position of the background image and the sticker will be wrong, this problem is to be solved.
 

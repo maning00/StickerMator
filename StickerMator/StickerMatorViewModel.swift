@@ -85,16 +85,17 @@ class StickerMatorViewModel: ReferenceFileDocument {
     
     
     func addSticker (url: URL, at location: CGPoint, zoomScale: CGFloat, undoManager: UndoManager?) {
-        let session = URLSession.shared
-        let publisher = session.dataTaskPublisher(for: url)
-            .map {(data, _) in UIImage(data: data)}
-            .replaceError(with: nil)
-            .receive(on: DispatchQueue.main)
-        _ = publisher.sink { [weak self] image in
-            if let uiImage = image {
-                self?.addSticker (image: uiImage, at: location, zoomScale: zoomScale, undoManager: undoManager)
+        DispatchQueue.main.async {
+            do {
+                let data = try Data(contentsOf: url)
+                if let uiImage = UIImage(data: data) {
+                    self.addSticker (image: uiImage, at: location, zoomScale: zoomScale, undoManager: undoManager)
+                }
+            } catch {
+                logger.error("Get content error: \(error)")
             }
         }
+        
     }
     
     func addSticker (path: String, at location: CGPoint, zoomScale: CGFloat, undoManager: UndoManager?) {
