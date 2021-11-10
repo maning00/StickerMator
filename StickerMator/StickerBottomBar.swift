@@ -21,22 +21,28 @@ struct StickerBottomBar: View {
     }
     
     @State private var chosenIndex = 0
-    @State private var stickersetToEdit: StickerPack?
+    
+    /// selected pack to show editor.
+    @State private var selectedPack: StickerPack?
+    
+    /// Show Manager
     @State private var managing = false
-    @State private var showEditor = false
+    
+    /// Show sticker maker
+    @State private var showStickerMaker = false
     
     @ViewBuilder
     var contextMenu: some View {
         AnimatedActionButton(title: "New", systemImage: "plus.circle") {
             store.addStickerPack(name: "New", at: chosenIndex)
-            stickersetToEdit = store.stickerSet(at: chosenIndex)
+            selectedPack = store.stickerSet(at: chosenIndex)
         }
         AnimatedActionButton(title: "Manager", systemImage: "slider.vertical.3") {
             managing = true
         }
         gotoMenu
         AnimatedActionButton(title: "Sticker Maker", systemImage: "wand.and.rays") {
-            showEditor = true
+            showStickerMaker = true
         }
     }
     
@@ -66,10 +72,13 @@ struct StickerBottomBar: View {
             ScrollingStickerView(images: store.stickerSet(at: chosenIndex).stickers)
             Text(stickerSet.name)
         }
+        .popover(item: $selectedPack) {_ in
+            StickerPackEditor(stickerPackToEdit: $store.stickerPacks[chosenIndex])
+        }
         .sheet(isPresented: $managing) {
             StickerPackManager()
         }
-        .sheet(isPresented: $showEditor) {
+        .sheet(isPresented: $showStickerMaker) {
             StickerMaker(editorDocument: StickerMakerDocument(), showDialogue: .imagePicker)
         }
     }

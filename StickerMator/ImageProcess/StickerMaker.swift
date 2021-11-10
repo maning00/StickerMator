@@ -15,7 +15,7 @@ import CoreImage.CIFilterBuiltins
 struct StickerMaker: View {
     
     /// FilterIntensity controlled by slider.
-    @State private var filterIntensity = 0.5
+    @State private var filterIntensity = 0.0
     
     /// A StickerStorage can get stickers from.
     @EnvironmentObject var store: StickerStorage
